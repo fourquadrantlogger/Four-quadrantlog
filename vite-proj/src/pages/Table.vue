@@ -1,35 +1,71 @@
 <template>
-    <div class="demo-date-picker">
-        <div class="block">
-            <span class="demonstration">Default</span>
-            <el-date-picker
-                v-model="ctimestart"
-                type="daterange"
-                range-separator="To"
-                start-placeholder="Start date"
-                end-placeholder="End date"
-            />
-        </div>
-        <div class="block">
-            <span class="demonstration">With quick options</span>
-            <el-date-picker
-                v-model="ctimeend"
-                type="daterange"
-                unlink-panels
-                range-separator="To"
-                start-placeholder="Start date"
-                end-placeholder="End date"
-            />
-        </div>
-    </div>
-    <el-input v-model="quadrantquery" placeholder="象限" />
-    <el-input v-model="atypequery" placeholder="类别" />
-    <el-input v-model="titlequery" placeholder="标题" />
-    <el-input v-model="detailquery" placeholder="详情" />
-    <el-input v-model="reviewquery" placeholder="回顾" />
+    <el-row>
+        <el-col :span="3">
+            <div class="grid-content bg-purple" />
 
-    <el-table :data="List" height="1000px" style="width: 100%">
-        <el-table-column prop="quadrant" label="象限" width="180" />
+            <el-date-picker
+                v-model="ctimestartquery"
+                type="datetime"
+                placeholder="起始"
+                align="right"
+                format="YYYY-MM-DD HH:mm:ss"
+            ></el-date-picker>
+        </el-col>
+        <el-col :span="3">
+            <div class="grid-content bg-purple-light" />
+            <el-date-picker
+                v-model="ctimeendquery"
+                type="datetime"
+                placeholder="结束"
+                align="right"
+                format="YYYY-MM-DD HH:mm:ss"
+            />
+        </el-col>
+        <el-col :span="3">
+            <el-select v-model="quadrantquery" multiple placeholder="象限">
+                <el-option v-for="item in QuadrantOptions" :key="item" :label="item" :value="item" />
+            </el-select>
+        </el-col>
+
+        <el-col :span="3">
+            <el-input v-model="atypequery" placeholder="类别" />
+        </el-col>
+
+        <el-col :span="4">
+            <el-input v-model="titlequery" placeholder="标题" />
+        </el-col>
+
+        <el-col :span="4">
+            <el-input v-model="detailquery" placeholder="详情" />
+        </el-col>
+
+        <el-col :span="4">
+            <el-input v-model="reviewquery" placeholder="回顾" />
+        </el-col>
+    </el-row>
+
+    <el-table
+        :data="List"
+        border
+        show-summary
+        :key="randomKey"
+        @cell-dblclick="editData"
+        height="1000px"
+        style="width: 100%"
+    >
+        <el-table-column prop="quadrant" label="象限" width="180" solt="size">
+            <template #footer="{ scope }">
+                <slot name="quadrant_slot" :scope="state">
+                    <el-input
+                        v-if="scope.row[scope.column.property + 'isShow']"
+                        :ref="scope.column.property"
+                        v-model="scope.row.quadrant"
+                        @blur="alterData(scope.row, scope.column)"
+                    ></el-input>
+                    <span v-else>{{ scope.row.quadrant }}</span>
+                </slot>
+            </template>
+        </el-table-column>>
         <el-table-column prop="ctime" label="时间" width="180" />
         <el-table-column prop="location" label="地址" />
         <el-table-column prop="atype" label="类别" />
@@ -40,14 +76,16 @@
 </template>
 
 <script >
-import {getLogList} from '../apis/apis'
+import { getLogList, Quadrant } from '../apis/apis'
 import { ElMessage } from 'element-plus'
+import { flatMap } from 'lodash'
 
 export default {
     data() {
         return {
-            ctimestart: '',
-            ctimeend: '',
+            randomKey: Math.random(),
+            ctimestartquery: '',
+            ctimeendquery: '',
             quadrantquery: '',
             atypequery: '',
             locationquery: '',
@@ -55,9 +93,16 @@ export default {
             detailquery: '',
             reviewquery: '',
             List: [],
+            QuadrantOptions: Quadrant,
         }
     },
     watch: {
+        ctimeendquery: function (v) {
+            this.listLog()
+        },
+        ctimestartquery: function (v) {
+            this.listLog()
+        },
         quadrantquery: function (v) {
             this.listLog()
         },
@@ -82,20 +127,60 @@ export default {
     },
     methods: {
         async listLog() {
-            const loglist = await getLogList({
+            let query = {}
+            if (this.ctimestartquery != null) {
+                query.start = this.ctimestartquery.toLocaleString()
+            }
+            if (this.ctimeendquery != null) {
+                query.end = this.ctimeendquery.toLocaleString()
+            }
+            if (this.quadrantquery != null) {
+                if (  this.quadrantquery instanceof Array){
+                    query.quadrant = this.quadrantquery.join('/')
+                }else{
+                     query.quadrant = this.quadrantquery
+                }
+               
+            }
+            if (this.atypequery != null) {
+                query.atype = this.atypequery
+            }
+            if (this.locationquery != null) {
+                query.location = this.locationquery
+            }
+            if (this.titlequery != null) {
+                query.title = this.titlequery
+            }
+            if (this.detailquery != null) {
+                query.detail = this.detailquery
+            } if (this.reviewquery != null) {
+                query.review = this.reviewquery
+            }
 
-                quadrant: this.quadrantquery,
-                atype: this.atypequery,
-                location: this.locationquery,
-                title: this.titlequery,
-                detail: this.detailquery,
-                review: this.reviewquery,
-            })
+            const loglist = await getLogList(query)
             console.log(loglist)
             this.List = [].concat(loglist)
             ElMessage.success('获取日志成功')
             return
         },
+        editData(row, column) {
+            console.log("......")
+            row[column.property + "isShow"] = true
+            //refreshTable是table数据改动时，刷新table的
+            this.refreshTable()
+            this.$nextTick(() => {
+                this.$refs[column.property] && this.$refs[column.property].focus()
+            })
+        },
+        alterData(row, column) {
+            row[column.property + "isShow"] = false
+            this.refreshTable()
+        },
+
+        refreshTable() {
+            this.randomKey = Math.random()
+        },
+
     },
 }
 

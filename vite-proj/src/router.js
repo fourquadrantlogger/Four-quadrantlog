@@ -6,11 +6,24 @@ export const router =  createRouter({
   history: createWebHistory(),
   routes: [
     { 
-      path: '/',
-      component: () => import('./pages/About.vue'),
+      path: '/list',
+      component: () => import('./pages/List.vue'),
+    },
+    { 
+      path: '/note',
+      component: () => import('./pages/Note.vue'),
+    },
+    { 
+      path: '/note/:logid',
+      props: true,
+      component: () => import('./pages/Note.vue'),
+    },
+    { 
+      path: '/table',
+      component: () => import('./pages/Table.vue'),
     },
     { path: '/about',
-    component: () => import('./pages/404.vue'),
+      component: () => import('./pages/About.vue'),
     },
   ],
 })

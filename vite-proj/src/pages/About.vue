@@ -1,7 +1,10 @@
 <template>
-  <main-layout>
+ 
     <p>About page.</p>
-  </main-layout>
+      <Layout>
+        <HelloWorld></HelloWorld>
+      </Layout>
+  
 </template>
 
 <script>
