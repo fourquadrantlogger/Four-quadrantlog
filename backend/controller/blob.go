@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"fourquadrantlog/assist/xlog"
 	"fourquadrantlog/model"
@@ -10,29 +11,31 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path"
-	"strconv"
+	"strings"
 	"time"
 )
 
 func GetLog(c *gin.Context) {
-	_logid := c.Params.ByName("logid")
-	logid, _ := strconv.Atoi(_logid)
+	logid := c.Params.ByName("logid")
+
 	b, err := service.GetBlob(logid)
 	if err != nil {
 		c.Error(err)
 	} else {
+		b.FixShow()
 		c.JSON(200, b)
 	}
 }
 
 func GetBlob(c *gin.Context) {
-	_blobid := c.Params.ByName("blobid")
-	blobid, _ := strconv.Atoi(_blobid)
+	blobid := c.Params.ByName("blobid")
+
 	b, err := service.GetBlob(blobid)
 	if err != nil {
 		c.Error(err)
 	} else {
 		contentType := http.DetectContentType(b.Blob)
+		b.FixShow()
 		c.Data(200, contentType, b.Blob)
 	}
 }
@@ -40,8 +43,12 @@ func GetBlob(c *gin.Context) {
 func CreateBlob(c *gin.Context) {
 	var log model.Blob
 
-	log.Atype = c.PostForm("atype")
-	log.Quadrant = c.PostForm("quadrant")
+	var Atype_ = strings.Split(c.PostForm("atype"), "/")
+	atypes, _ := json.Marshal(Atype_)
+	log.Atype = string(atypes)
+
+	log.Quadrant_ = c.PostForm("quadrant")
+	log.Quadrant = model.Quadrant2Int(log.Quadrant_)
 	var err error
 	log.Ctime, err = time.Parse("2006-01-02 15:04:05", c.PostForm("ctime"))
 	if err != nil {

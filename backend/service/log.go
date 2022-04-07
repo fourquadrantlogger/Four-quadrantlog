@@ -1,16 +1,45 @@
 package service
 
 import (
+	"errors"
 	"fourquadrantlog/assist/xlog"
 	"fourquadrantlog/model"
 	"fourquadrantlog/storage/mysqlcli"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"time"
 )
 
-func CreateLog(log *model.Log) (err error) {
-	log.ID = nil
+func DeleteLog(id string) (err error) {
 
+	cli, err := mysqlcli.GetMysqlClient()
+	if err != nil {
+		return
+	}
+	if id == "" {
+		return errors.New("id not set")
+	}
+	tx := cli.Table("log").Where("id = ?", id).Delete(new(model.Log))
+	err = tx.Error
+	if err == nil {
+		xlog.Logger.Info("insert log", zap.Any("log", id))
+	}
+	return
+}
+func UpdateLog(log *model.Log) (err error) {
+	cli, err := mysqlcli.GetMysqlClient()
+	if err != nil {
+		return
+	}
+	tx := cli.Table("log").Where("id = ?", log.ID).Updates(log)
+	err = tx.Error
+	if err == nil {
+		xlog.Logger.Info("insert log", zap.Any("log", log))
+	}
+	return
+}
+func CreateLog(log *model.Log) (err error) {
+	log.ID = uuid.New().String()
 	cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
@@ -24,7 +53,7 @@ func CreateLog(log *model.Log) (err error) {
 }
 
 func CreateBlob(log *model.Blob) (err error) {
-	log.ID = nil
+	log.ID = uuid.New().String()
 
 	cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
@@ -38,7 +67,7 @@ func CreateBlob(log *model.Blob) (err error) {
 	}
 	return
 }
-func GetBlob(id int) (b model.Blob, err error) {
+func GetBlob(id string) (b model.Blob, err error) {
 
 	cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
@@ -49,14 +78,14 @@ func GetBlob(id int) (b model.Blob, err error) {
 
 	return
 }
-func GetLogs(start, end time.Time, location, quadrant, atype, title, detail, review string, offset, limit int, orderby string) (bs []model.Log, err error) {
+func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail, review string, offset, limit int, orderby string) (bs []model.Log, err error) {
 	cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
 	}
 	tx := cli.Table("log")
-	if quadrant != "" {
-		tx = tx.Where("quadrant like ?", quadrant)
+	if quadrant > 0 {
+		tx = tx.Where("quadrant = ?", quadrant)
 	}
 	if start.Unix() != (time.Time{}.Unix()) {
 		tx = tx.Where("ctime >= ?", start)
@@ -86,7 +115,13 @@ func GetLogs(start, end time.Time, location, quadrant, atype, title, detail, rev
 	} else {
 		tx = tx.Order("ctime desc")
 	}
-	tx = tx.Find(&bs)
-	err = tx.Error
+	err = tx.Find(&bs).Error
+
+	if err != nil {
+		panic(err)
+		xlog.Logger.Error("sql", zap.Error(err))
+		return
+	}
+
 	return
 }

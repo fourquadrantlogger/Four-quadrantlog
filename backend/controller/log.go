@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
 	"fourquadrantlog/model"
 	"fourquadrantlog/service"
@@ -14,7 +15,8 @@ func GetLogs(c *gin.Context) {
 	var start, end time.Time
 	var offset, limit = 0, 20
 	if c.Query("start") != "" {
-		o, _ := time.Parse("2006-01-02 15:04:05", c.Query("start"))
+		fmt.Println(c.Query("start"))
+		o, _ := time.Parse("2006/1/2 15:04:05", c.Query("start"))
 		if o.Unix() != 0 {
 			start = o
 		} else {
@@ -26,7 +28,7 @@ func GetLogs(c *gin.Context) {
 
 	}
 	if c.Query("end") != "" {
-		o, _ := time.Parse("2006-01-02 15:04:05", c.Query("end"))
+		o, _ := time.Parse("2006/1/2 15:04:05", c.Query("end"))
 		if o.Unix() != 0 {
 			end = o
 		} else {
@@ -48,9 +50,10 @@ func GetLogs(c *gin.Context) {
 			limit = o
 		}
 	}
+	var quadrantint int = model.Quadrant2Int(c.Query("quadrant"))
 	b, err := service.GetLogs(start, end,
+		quadrantint,
 		c.Query("location"),
-		c.Query("quadrant"),
 		c.Query("atype"),
 		c.Query("title"),
 		c.Query("detail"),
@@ -62,17 +65,22 @@ func GetLogs(c *gin.Context) {
 	if err != nil {
 		c.Error(err)
 	} else {
+		for i, _ := range b {
+			b[i].FixShow()
+		}
 		c.JSON(200, b)
 	}
 }
 func CreateLog(c *gin.Context) {
 	var log model.Log
 	if c.Bind(&log) == nil {
-		fmt.Println(log.Ctime.Unix())
+		if log.Ctime_ != "" {
+			log.Ctime, _ = time.Parse("2006-01-02 15:04:05", log.Ctime_)
+		}
 		if log.Ctime.Unix() == (time.Time{}.Unix()) {
 			log.Ctime = time.Now()
 		}
-
+		log.FixForDB()
 		err := service.CreateLog(&log)
 		if err != nil {
 			c.Error(err)
@@ -83,4 +91,49 @@ func CreateLog(c *gin.Context) {
 			})
 		}
 	}
+}
+
+func UpdateLog(c *gin.Context) {
+	var log model.Log
+
+	if c.Bind(&log) == nil {
+		if log.ID == "" {
+			c.Error(errors.New("need id"))
+			return
+		}
+		if log.Ctime_ != "" {
+			log.Ctime, _ = time.Parse("2006-01-02 15:04:05", log.Ctime_)
+		}
+		if log.Ctime.Unix() == (time.Time{}.Unix()) {
+			log.Ctime = time.Now()
+		}
+
+		err := service.UpdateLog(&log)
+		if err != nil {
+			c.Error(err)
+		} else {
+			c.JSON(http.StatusOK, gin.H{
+				"status": "ok",
+				"data":   log,
+			})
+		}
+	}
+}
+
+func DeleteLog(c *gin.Context) {
+	logid := c.Params.ByName("logid")
+	if logid == "" {
+		c.Error(errors.New("id not set"))
+		return
+	}
+	err := service.DeleteLog(logid)
+	if err != nil {
+		c.Error(err)
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"status": "ok",
+			"data":   logid,
+		})
+	}
+
 }

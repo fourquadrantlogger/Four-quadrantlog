@@ -11,6 +11,8 @@ func main() {
 
 	r.POST("/api/log", controller.CreateLog)
 	r.POST("/api/blob", controller.CreateBlob)
+	r.PUT("/api/log", controller.UpdateLog)
+	r.DELETE("/api/log:logid", controller.DeleteLog)
 	r.GET("/api/blob/:blobid", controller.GetBlob)
 	r.GET("/api/log/:logid", controller.GetLog)
 	r.GET("/api/log", controller.GetLogs)
