@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-fourquadrantlog-apiserver-service
+  labels:
+    app: {{ .Release.Name }}-fourquadrantlog-apiserver
+spec:
+  ports:
+    - name: apiserver-port
+      port: 80
+#  clusterIP: None
+  selector:
+    app: {{ .Release.Name }}-fourquadrantlog-apiserver

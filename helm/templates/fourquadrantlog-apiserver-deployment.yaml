@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-fourquadrantlog-apiserver-deployment
+  labels:
+    app: {{ .Release.Name }}-fourquadrantlog-apiserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-fourquadrantlog-apiserver
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-fourquadrantlog-apiserver
+    spec:
+      containers:
+        - name: {{ .Release.Name }}-fourquadrantlog-apiserver
+          image: {{.Values.fourquadrantlog.apiserver.image}}:{{.Values.fourquadrantlog.apiserver.tag}}
+          ports:
+            - containerPort: 80
+              protocol: 'TCP'
+          env:
+            - name: APISERVER_PORT
+              value: "80"
+            - name: MYSQL
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mysqldsn

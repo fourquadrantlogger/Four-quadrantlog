@@ -1,0 +1,4 @@
+fourquadrantlog:
+  apiserver:
+    image:  docker.io/timeloveboy/fourquadrantlog
+    tag:  latest

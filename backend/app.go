@@ -4,6 +4,7 @@ import (
 	_ "fourquadrantlog/assist/xlog"
 	"fourquadrantlog/controller"
 	"github.com/gin-gonic/gin"
+	"os"
 )
 
 func main() {
@@ -17,5 +18,5 @@ func main() {
 	r.GET("/api/log/:logid", controller.GetLog)
 	r.GET("/api/log", controller.GetLogs)
 
-	r.Run(":10008")
+	r.Run(":" + os.Getenv("APISERVER_PORT"))
 }
