@@ -1,0 +1,152 @@
+{
+  "moduleId": 142,
+  "formId": 14210,
+  "formColCount": 1,
+  "colOrder": [
+    100, 101, 102,
+    103, 104, 105,
+    106,
+    110
+  ],
+  "formColShow": {
+    
+  },
+  "ruleMeta": {
+    
+  },
+  "itemMeta": {
+    "100": {  
+      "columnId": 100,
+      "colName": "title",
+      "label": "标题",
+      "controlType": 101,
+      "isClear": false,
+      "defValue": 1000,
+      "extend": {
+        "placeholder": "多行文本",
+        "title": "多行文本"
+      },
+      "colCount": 1
+    },
+    "101": {  
+      "columnId": 101,
+      "colName": "quadrant",
+      "label": "象限",
+      "controlType": 161,
+      "isClear": false,
+      "defValue": "1000",
+      "extend": {
+        "placeholder": "象限",
+        "title": "象限"
+      },
+      "optionList": [
+        {
+          "value": "1000",
+          "label": "时空"
+        },
+        {
+          "value": "2000",
+          "label": "肉体"
+        },
+        {
+          "value": "3000",
+          "label": "信息知识"
+        },
+        {
+          "value": "4000",
+          "label": "社会关系"
+        },
+        {
+          "value": "5000",
+          "label": "持有物"
+        }
+      ],
+      "colCount": 1
+    },
+    "102": {  
+      "columnId": 102,
+      "colName": "atype",
+      "label": "分类",
+      "controlType": 101,
+      "isClear": false,
+      "defValue": "1000",
+      "extend": {
+        "placeholder": "分类",
+        "title": "分类"
+      },
+      "colCount": 1
+    },
+    "103": {  
+      "columnId": 103,
+      "colName": "detail",
+      "label": "内容",
+      "controlType": 100,
+      "isClear": false,
+      "defValue": "",
+      "extend": {
+        "placeholder": "内容",
+        "title": "内容",
+        "rows": 6,
+        "autosize": false,
+        "maxlength": 10000
+      },
+      "colCount": 1
+    },
+    
+    "104": {  
+      "columnId": 104,
+      "colName": "review",
+      "label": "思考",
+      "controlType": 100,
+      "isClear": false,
+      "defValue": "",
+      "extend": {
+        "placeholder": "思考",
+        "title": "思考",
+        "rows": 6,
+        "autosize": false,
+        "maxlength": 1000
+      },
+      "colCount": 1
+    },
+    "105": {  
+      "columnId": 105,
+      "colName": "blob",
+      "label": "图片",
+      "controlType": 101,
+      "isClear": false,
+      "defValue": "",
+      "extend": {
+        "placeholder": "图片",
+        "title": "图片"
+      },
+      "colCount": 1
+    },
+    "106": {  
+      "columnId": 106,
+      "colName": "location",
+      "label": "location",
+      "controlType": 101,
+      "isClear": false,
+      "defValue": "",
+      "extend": {
+        "placeholder": "location",
+        "title": "location"
+      },
+      "colCount": 1
+    },
+    "110": {  
+      "columnId": 110,
+      "colName": "ctime",
+      "label": "日期时间",
+      "controlType": 121,
+      "isClear": false,
+      "defValue": "",
+      "extend": {
+        "placeholder": "日期时间",
+        "title": "日期时间"
+      },
+      "colCount": 1
+    }
+  }
+}
