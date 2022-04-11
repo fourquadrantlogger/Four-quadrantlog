@@ -17,6 +17,7 @@ spec:
       containers:
         - name: {{ .Release.Name }}-fourquadrantlog-apiserver
           image: {{.Values.fourquadrantlog.apiserver.image}}:{{.Values.fourquadrantlog.apiserver.tag}}
+          command: ['/opt/project/backend/fourquadrantlog']
           ports:
             - containerPort: 80
               protocol: 'TCP'

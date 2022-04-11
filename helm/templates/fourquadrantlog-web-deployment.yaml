@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-fourquadrantlog-web-deployment
+  labels:
+    app: {{ .Release.Name }}-fourquadrantlog-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-fourquadrantlog-web
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-fourquadrantlog-web
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-fourquadrantlog-web
+        image: {{.Values.fourquadrantlog.web.image}}:{{.Values.fourquadrantlog.web.tag}}
+        command: ['sh', '-c', 'cd vite-proj && npm run dev']
+        ports:
+          - containerPort: 3001
+      - name: {{ .Release.Name }}-fourquadrantlog-web2
+        image: {{.Values.fourquadrantlog.web.image}}:{{.Values.fourquadrantlog.web.tag}}
+        command: ['sh', '-c', 'cd vue-web && npm run dev']
+        ports:
+        - containerPort: 3001
