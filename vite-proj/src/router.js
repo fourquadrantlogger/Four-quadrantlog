@@ -6,10 +6,6 @@ export const router =  createRouter({
   history: createWebHistory(),
   routes: [
     { 
-      path: '/list',
-      component: () => import('./pages/List.vue'),
-    },
-    { 
       path: '/note',
       component: () => import('./pages/Note.vue'),
     },
@@ -21,9 +17,6 @@ export const router =  createRouter({
     { 
       path: '/table',
       component: () => import('./pages/Table.vue'),
-    },
-    { path: '/about',
-      component: () => import('./pages/About.vue'),
     },
   ],
 })
