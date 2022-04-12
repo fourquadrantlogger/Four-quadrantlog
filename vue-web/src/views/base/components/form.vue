@@ -7,10 +7,9 @@
         :model="model"
         v-bind="formMeta"
       >
-      </nf-form>  
+      </nf-form>
     </el-col>
-  </el-row>
-   <el-row :gutter="20">
+
     <el-col :span="8">
     </el-col>
     <el-col :span="8">
@@ -19,12 +18,14 @@
   </el-row>
 </template>
 
-
 <script>
   import { reactive, watch, onMounted, nextTick } from 'vue'
+  import { store } from '@naturefw/nf-state'
   import { ElCol, ElRow, ElSlider } from 'element-plus'
-  import { createModel, lifecycle } from '@naturefw/ui-core'
-  import _formMeta from '../../json/form.json'
+  // import { createModel, lifecycle } from '@naturefw/ui-core'
+  // 局部状态
+  import { getListState } from '../controller/state-list.js'
+  import { regFormState } from '../controller/state-form.js'
 
 </script>
 
@@ -38,22 +39,19 @@
     dialogInfo: [Object]
   })
 
+  // 获取列表状态
+  const state = getListState()
+
+  // 注册表单状态
+  const modelManage = regFormState()
+  const model = modelManage.model
+
   // 获取表单控件需要的meta
-  const formMeta = reactive(_formMeta)
-  // 改为插槽
-  // formMeta.itemMeta[101].controlType = 1
+  const { formMeta } = store.meta[state.moduleId]
 
-  // 根据 meta 创建表单的 model
-  const model = createModel(formMeta.itemMeta, formMeta.colOrder)
-
-  const addNew = () => {
-    const a = {}
-    Object.assign(a, model)
-    dataList.unshift(a)
-  }
-
+  // 添加或者修改
   const save = () => {
-
+    modelManage.submit()
   }
 
 </script>

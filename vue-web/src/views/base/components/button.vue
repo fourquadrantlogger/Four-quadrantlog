@@ -4,26 +4,31 @@
     :componentKind="componentKind"
     :active="active"
     :moduleId="moduleId"
-    :dataId="selection.dataId"
-    :dataIds="selection.dataIds"
+    :dataId="state.selection.dataId"
+    :dataIds="state.selection.dataIds"
   >
   </nf-button>
 </template>
 
 <script>
   import { reactive, defineAsyncComponent } from 'vue'
-  import _buttonMeta from '../../json/button.json'
+  import { store } from '@naturefw/nf-state'
+
+  // 局部状态
+  import { getListState } from '../controller/state-list.js'
 
 </script>
 
 <script setup>
   const props = defineProps({
     moduleId: Number,
-    selection: Object,
     active: Object
   })
 
-  const buttonMeta = reactive(_buttonMeta)
+  // 获取列表状态
+  const state = getListState()
+
+  const { buttonMeta } = store.meta[state.moduleId]
 
   buttonMeta.events = {
     deleteClick: (id, meta) => {

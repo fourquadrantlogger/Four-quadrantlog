@@ -1,0 +1,92 @@
+[
+  {
+    "menuId": "1000",
+    "text": "时空",
+    "description": "描述",
+    "icon": "FolderOpened",
+    "children": [
+      {
+        "menuId": "11_quick_start_1",
+        "text": "选项一",
+        "description": "",
+        "icon": "Document",
+        "children": []
+      },
+      {
+        "menuId": "11_quick_start_2",
+        "text": "选项二",
+        "description": "",
+        "icon": "Document"
+      }
+    ]
+  },
+  {
+    "menuId": "2000",
+    "text": "肉体",
+    "description": "描述",
+    "icon": "FolderOpened" 
+  },
+  {
+    "menuId": "3000",
+    "text": "信息知识",
+    "description": "描述",
+    "icon": "FolderOpened",
+    "children": [
+      {
+        "menuId": "11_quick_start_1",
+        "text": "选项一",
+        "description": "",
+        "icon": "Document",
+        "children": []
+      },
+      {
+        "menuId": "11_quick_start_2",
+        "text": "选项二",
+        "description": "",
+        "icon": "Document"
+      }
+    ]
+  },
+  {
+    "menuId": "4000",
+    "text": "社会关系",
+    "description": "描述",
+    "icon": "FolderOpened",
+    "children": [
+      {
+        "menuId": "11_quick_start_1",
+        "text": "选项一",
+        "description": "",
+        "icon": "Document",
+        "children": []
+      },
+      {
+        "menuId": "11_quick_start_2",
+        "text": "选项二",
+        "description": "",
+        "icon": "Document"
+      }
+    ]
+  },
+  {
+    "menuId": "5000",
+    "text": "持有物",
+    "description": "描述",
+    "icon": "FolderOpened",
+    "children": [
+      {
+        "menuId": "11_quick_start_1",
+        "text": "选项一",
+        "description": "",
+        "icon": "Document",
+        "children": []
+      },
+      {
+        "menuId": "11_quick_start_2",
+        "text": "选项二",
+        "description": "",
+        "icon": "Document"
+      }
+    ]
+  }
+]

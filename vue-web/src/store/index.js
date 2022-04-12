@@ -1,6 +1,9 @@
 // 加载状态的类库
 import { createStore } from '@naturefw/nf-state'
 
+import { loadMeta } from '../storage/service-meta.js'
+
+const _baseUrl = (document.location.host.includes('.gitee.io')) ? '/four-quadrant/' : '/'
 
 /**
  * 统一注册全局状态
@@ -10,28 +13,34 @@ export default createStore({
   store: {
     // 纯 state
     web: {
-      ver: 1.0,
-      name: 'jyk' //
+      state: () => {
+        return {
+          ver: 1.0,
+          baseUrl: _baseUrl,
+          load: 'start',
+          dbHelp: null, // indexedDB 的help
+          name: 'jyk' //
+        }
+      }
     },
-    log_model: {
-      id: '', // 
-      title: '', // 100 标题
-      quadrant: '', // 101 象限
-      atype: '', // 102 分类
-      detail: '', // 103 内容
-      review: '', // 104 思考
-      blob: '', // 105 图片
-      location: '', // 106 
-      ctime: '' // 110 
+    // 项目运行需要的 meta 信息
+    meta: {
+      0: {
+        moduleId: 0,
+        grid: {},
+        pager: {},
+        form: {},
+        find: {},
+        button: {}
+      }
     },
     // 有 getters、actions
     log_list: {
       state: [],
       getters: {
-       
       },
       actions: {
-        async loadData(val, state) {
+        async loadData (val, state) {
           const foo = await testPromie()
           state.name = foo
           this.name = foo
@@ -48,13 +57,12 @@ export default createStore({
         */
         level: 1
       }
-    } 
+    }
   },
-  
+
   // 可以给全局状态设置初始状态，同步数据可以直接在上面设置，如果是异步数据，可以在这里设置。
-  init (store) {
-    setTimeout(() => {
-      
-    }, 2000)
+  async init (store) {
+    await loadMeta('m_log')
+    store.web.load = 'end'
   }
 })

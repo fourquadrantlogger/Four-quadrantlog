@@ -16,6 +16,11 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 // 二次封装
 import { nfElementPlus, dialogDrag } from '@naturefw/ui-elp'
 
+// 数据库
+import db from './storage'
+
+db()
+
 createApp(App)
   .use(store)
   .use(installIcon) // 注册全局图标
