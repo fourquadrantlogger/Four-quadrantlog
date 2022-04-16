@@ -31,7 +31,7 @@ RUN pwd && cd backend &&\
 
 COPY vite-proj vite-proj
 RUN pwd && cd vite-proj &&\
-    npm install
+    npm install && npm run build
 COPY vue-web vue-web
 RUN cd vue-web &&\
     npm install
