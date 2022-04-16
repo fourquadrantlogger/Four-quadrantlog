@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"fourquadrantlog/assist/xlog"
+	"fourquadrantlog/assist/xtime"
 	"fourquadrantlog/model"
 	"fourquadrantlog/service"
 	"github.com/gin-gonic/gin"
@@ -50,11 +51,11 @@ func CreateBlob(c *gin.Context) {
 	log.Quadrant_ = c.PostForm("quadrant")
 	log.Quadrant = model.Quadrant2Int(log.Quadrant_)
 	var err error
-	log.Ctime, err = time.Parse("2006-01-02 15:04:05", c.PostForm("ctime"))
+	log.Ctime, err = xtime.Parse(c.PostForm("ctime"))
 	if err != nil {
 		xlog.Logger.Warn("ctime err,will use time.now", zap.Error(err))
-	} else {
 		log.Ctime = time.Now()
+		err = nil
 	}
 
 	lo := c.PostForm("location")
