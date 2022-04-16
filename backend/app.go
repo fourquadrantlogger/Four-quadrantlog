@@ -18,5 +18,8 @@ func main() {
 	r.GET("/api/log/:logid", controller.GetLog)
 	r.GET("/api/log", controller.GetLogs)
 
+	if os.Getenv("APISERVER_PORT") == "" {
+		os.Setenv("APISERVER_PORT", "10008")
+	}
 	r.Run(":" + os.Getenv("APISERVER_PORT"))
 }
