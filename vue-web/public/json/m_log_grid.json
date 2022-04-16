@@ -1,0 +1,61 @@
+{
+  "moduleId": 142,
+  "height": 400,
+  "idName": "id",
+  "colOrder": [
+    90, 100, 101, 102, 110
+  ],
+  "stripe": true,
+  "border": true,
+  "fit": true,
+  "highlightCurrentRow": true,
+  "highlight-current-row": true,
+  "itemMeta": {
+    "90": {
+      "id": 90,
+      "colName": "id",
+      "label": "编号",
+      "width": 140,
+      "title": "分类",
+      "align": "center",
+      "header-align": "center"
+    },
+    "100": {
+      "id": 100,
+      "colName": "title",
+      "label": "标题",
+      "width": 140,
+      "title": "标题",
+      "align": "left",
+      "header-align": "center"
+    },
+    "101": {
+      "id": 101,
+      "colName": "quadrant",
+      "label": "象限",
+      "width": 140,
+      "title": "象限",
+      "align": "center",
+      "header-align": "center"
+    },
+    "102": {
+      "id": 102,
+      "colName": "atype",
+      "label": "分类",
+      "width": 140,
+      "title": "分类",
+      "align": "left",
+      "header-align": "center"
+    },
+    "110": {
+      "id": 110,
+      "colName": "ctime",
+      "label": "日期",
+      "width": 190,
+      "title": "日期",
+      "align": "center",
+      "header-align": "center"
+    }
+  }
+}
+

@@ -1,0 +1,50 @@
+{
+  "moduleId": 142,
+  "btnOrder": [10, 20, 30],
+  "itemMeta": {
+    "10": {
+      "btnTitle": "添加log",
+      "btnKind": "add",
+      "dialogTitle": "添加log" ,
+      "dialogWidth": "50%",
+      "controlKey": "form",
+      "openModuleId": 142,
+      "formMetaId": 10,
+      "actionId": 10,
+      "hotkey": "a"
+    },
+    "20": {
+      "btnTitle": "修改log",
+      "btnKind": "update",
+      "dialogTitle": "修改log" ,
+      "dialogWidth": "50%",
+      "controlKey": "form",
+      "openModuleId": 142,
+      "formMetaId": 10,
+      "actionId": 20,
+      "hotkey": "s"
+    },
+    "30": {
+      "btnTitle": "删除log",
+      "btnKind": "delete",
+      "dialogTitle": "删除log" ,
+      "dialogWidth": "50%",
+      "controlKey": "delete",
+      "openModuleId": 142,
+      "formMetaId": 10,
+      "actionId": 30,
+      "hotkey": "d"
+    },
+    "50": {
+      "btnTitle": "查询",
+      "btnKind": "find",
+      "dialogTitle": "" ,
+      "dialogWidth": "50%",
+      "controlKey": "delete",
+      "openModuleId": 142,
+      "formMetaId": 10,
+      "actionId": 30,
+      "hotkey": "d"
+    }
+  }
+}

@@ -13,15 +13,15 @@ import {
 } from '@element-plus/icons-vue'
 
 const dictIcon = reactive({
-  'CloseBold': CloseBold,
-  'Close': Close,
-  'Plus': Plus,
-  'Star': Star,
-  'UserFilled': UserFilled,
-  'Loading': Loading,
-  'Connection': Connection,
-  'Edit': Edit,
-  'FolderOpened': FolderOpened
+  CloseBold: CloseBold,
+  Close: Close,
+  Plus: Plus,
+  Star: Star,
+  UserFilled: UserFilled,
+  Loading: Loading,
+  Connection: Connection,
+  Edit: Edit,
+  FolderOpened: FolderOpened
 })
 
 const installIcon = (app) => {

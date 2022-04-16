@@ -20,25 +20,56 @@
         <menus></menus>
       </el-aside>
       <el-main>
-        <!--文档区域-->
-        <data-list></data-list>
+        <!--编辑区域-->
+        <component
+          :is="delay[delayKind]"
+        >
+        </component>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
-<script setup>
-  import { defineAsyncComponent, reactive } from 'vue'
+<script>
+  import { defineAsyncComponent, watch, ref } from 'vue'
   import { ElContainer, ElHeader, ElAside, ElMain, ElSwitch } from 'element-plus'
   // 访问状态
   import { store } from '@naturefw/nf-state'
   // 左侧菜单导航
   import menus from './views/menus.vue'
-  // 列表
-  import dataList from './views/base/data-list.vue'
 
-  const { log } = store
+  export default {
+    components: {
+      menus,
+      ElContainer,
+      ElHeader,
+      ElAside,
+      ElMain,
+      ElSwitch
+    },
+    setup () {
+      // 延迟加载
+      const delay = {
+        load: '',
+        list: defineAsyncComponent(() => import('./views/base/data-list.vue'))
+      }
 
+      const delayKind = ref('')
+
+      const { web } = store
+
+      watch(() => store.web.load, (load) => {
+        if (load === 'end') {
+          delayKind.value = 'list'
+        }
+      })
+
+      return {
+        delay,
+        delayKind
+      }
+    }
+  }
 </script>
 
 <style>

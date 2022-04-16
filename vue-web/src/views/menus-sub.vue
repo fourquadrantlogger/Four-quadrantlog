@@ -2,7 +2,7 @@
   <template v-for="(item, index) in subMenu">
     <!--树枝-->
     <template v-if="item.children && item.children.length > 0">
-      <el-sub-menu 
+      <el-sub-menu
         :key="item.menuId + '_' + index"
         :index="item.menuId"
         style="vertical-align: middle;"
@@ -44,7 +44,7 @@
   import { ElMenuItem, ElSubMenu } from 'element-plus'
   // 展示子菜单 - 递归
   import mySubMenu2 from './menus-sub.vue'
- 
+
 </script>
 
 <script setup>

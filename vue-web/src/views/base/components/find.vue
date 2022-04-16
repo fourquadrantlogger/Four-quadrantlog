@@ -9,10 +9,9 @@
   </nf-find>
 </template>
 
-
 <script>
   import { reactive, watch, onMounted, nextTick } from 'vue'
-  import _findMeta from '../../json/find.json'
+  import { store } from '@naturefw/nf-state'
   // 局部状态
   import { getListState } from '../controller/state-list.js'
 
@@ -28,7 +27,6 @@
   const state = getListState()
 
   // 获取表单控件需要的meta
-  const findMeta = reactive(_findMeta)
-
+  const { findMeta } = store.meta[state.moduleId]
 
 </script>
