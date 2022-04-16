@@ -16,7 +16,6 @@ RUN apt update -y &&\
     apt-transport-https \
     gnupg \
     rsync
-COPY deploy/nginx-linux.conf /etc/nginx/nginx.conf
 RUN v=1.18 && wget  "https://dl.google.com/go/go${v}.linux-amd64.tar.gz"  --progress=bar:force 2>&1 &&tar xzvf "go${v}.linux-amd64.tar.gz" && pwd
 
 ENV NODE_VERSION=16.x
@@ -37,4 +36,5 @@ RUN cd vue-web &&\
     npm install
 COPY deploy/run.sh deploy/run.sh
 RUN chmod +x deploy/run.sh
+COPY deploy/nginx-linux.conf /etc/nginx/nginx.conf
 CMD sh deploy/run.sh
