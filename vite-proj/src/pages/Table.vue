@@ -1,8 +1,7 @@
 <template>
-    <el-row>
+    <el-row style="height:50px;">
         <el-col :span="3">
             <div class="grid-content bg-purple" />
-
             <el-date-picker
                 v-model="ctimestartquery"
                 type="datetime"
@@ -52,10 +51,9 @@
         show-summary
         :key="randomKey"
         @cell-dblclick="editData"
-        height="1000px"
-        style="width: 100%"
+        class="maintable"
     >
-        <el-table-column prop="quadrant" label="象限" width="180" solt="size">
+        <el-table-column prop="quadrant" label="象限" width="100px" solt="size">
             <template #footer="{ scope }">
                 <slot name="quadrant_slot" :scope="state">
                     <el-input
@@ -75,13 +73,18 @@
         <el-table-column prop="detail" label="详情" />
         <el-table-column prop="review" label="回顾" />
     </el-table>
+    <el-pagination  v-model:currentPage="currentpage" background layout="prev, pager, next" :total="1000" @current-change="pagequery"/>
 </template>
-
+<style >
+.maintable{
+    height: calc(100% - 100px);
+    width: auto;
+}
+</style>
 <script >
 import { getLogList, Quadrant } from '../apis/apis'
 import { ElMessage } from 'element-plus'
-import { flatMap } from 'lodash'
-
+ 
 export default {
     data() {
         return {
@@ -94,6 +97,8 @@ export default {
             titlequery: '',
             detailquery: '',
             reviewquery: '',
+            currentpage:0,
+            pagesize:20,
             List: [],
             QuadrantOptions: Quadrant,
         }
@@ -123,6 +128,12 @@ export default {
         reviewquery: function (v) {
             this.listLog()
         },
+        pagequery: function (v) {
+            this.listLog()
+        },
+        pagesizequery: function (v) {
+            this.listLog()
+        },
     },
     mounted: function () {
         this.listLog();
@@ -144,21 +155,24 @@ export default {
                 }
                
             }
-            if (this.atypequery != null) {
+            if (this.atypequery != undefined) {
                 query.atype = this.atypequery
             }
-            if (this.locationquery != null) {
+            if (this.locationquery != undefined) {
                 query.location = this.locationquery
             }
-            if (this.titlequery != null) {
+            if (this.titlequery != undefined) {
                 query.title = this.titlequery
             }
-            if (this.detailquery != null) {
+            if (this.detailquery != undefined) {
                 query.detail = this.detailquery
-            } if (this.reviewquery != null) {
+            } if (this.reviewquery != undefined) {
                 query.review = this.reviewquery
             }
-
+            
+            query.offset=this.currentpage*this.pagesize
+            query.limit=this.pagesize
+            
             const loglist = await getLogList(query)
             console.log(loglist)
             this.List = [].concat(loglist)
