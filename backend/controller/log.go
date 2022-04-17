@@ -108,7 +108,7 @@ func UpdateLog(c *gin.Context) {
 		if log.Ctime.Unix() == (time.Time{}.Unix()) {
 			log.Ctime = time.Now()
 		}
-
+		log.FixForDB()
 		err := service.UpdateLog(&log)
 		if err != nil {
 			c.Error(err)
