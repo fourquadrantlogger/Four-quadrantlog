@@ -68,10 +68,10 @@ import {
 import { useRouter } from "vue-router";
  
 
+    const router = useRouter();
 const menuclick = (path: string) => {
      console.log(path)
-    const router = useRouter();
-    router.push(path)
+   router.push(path)
    
 }
 const isCollapse = ref(false)
