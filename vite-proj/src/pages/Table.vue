@@ -63,8 +63,10 @@
             <div class="grid-content bg-purple" />
 
             <div class="grid-content bg-purple">
-                <el-pagination v-model:currentPage="currentpage" background layout="prev, pager, next" :total="1000"
-                    style="width:100%;" @current-change="pagequery" />
+                <el-pagination v-model:currentPage="currentpage" background layout="prev, pager, next" :total="total"
+                   style="width:100%;" 
+                   @current-change="currentpagechange"
+                    />
             </div>
         </el-col>
         <el-col :span="4">
@@ -106,7 +108,8 @@ export default {
             maintable: {
                 height: '600px',
                 width: '100%',
-            }
+            },
+            total:0,
         }
     },
     watch: {
@@ -145,6 +148,10 @@ export default {
         this.listLog();
     },
     methods: {
+         currentpagechange(index){
+              console.log("index",index)
+              this.currentpage=index;
+         },
         celldbclick(row, column, cell, event){
 
             console.log(row, column, cell, event);
@@ -198,7 +205,8 @@ export default {
 
             const loglist = await getLogList(query)
             console.log(loglist)
-            this.List = [].concat(loglist)
+            this.List = [].concat(loglist.data)
+            this.total=loglist.total
             ElMessage.success('获取日志成功')
             return
         },

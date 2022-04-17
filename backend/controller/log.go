@@ -12,6 +12,11 @@ import (
 	"time"
 )
 
+type CommonQuery struct {
+	Data  interface{} `json:"data"`
+	Total int64       `json:"total"`
+}
+
 func GetLogs(c *gin.Context) {
 	var start, end time.Time
 	var offset, limit = 0, 20
@@ -42,7 +47,7 @@ func GetLogs(c *gin.Context) {
 		}
 	}
 	var quadrantint int = model.Quadrant2Int(c.Query("quadrant"))
-	b, err := service.GetLogs(start, end,
+	b, total, err := service.GetLogs(start, end,
 		quadrantint,
 		c.Query("location"),
 		c.Query("atype"),
@@ -59,7 +64,10 @@ func GetLogs(c *gin.Context) {
 		for i, _ := range b {
 			b[i].FixShow()
 		}
-		c.JSON(200, b)
+		c.JSON(200, CommonQuery{
+			Data:  b,
+			Total: total,
+		})
 	}
 }
 func CreateLog(c *gin.Context) {
