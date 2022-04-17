@@ -35,7 +35,7 @@
 
     <el-row>
         <el-scrollbar :style="maintable">
-            <el-table class="table-content" :data="List" border show-summary>
+            <el-table class="table-content" @cell-dblclick="celldbclick" :data="List" border show-summary>
                 <el-table-column prop="quadrant" label="象限" width="60px" >
                     <template #footer="{ scope }">
                         <slot name="quadrant_slot" :scope="state">
@@ -56,8 +56,6 @@
     </el-row>
 
     <el-row :gutter="20">
-
-
         <el-col :span="4">
             <div class="grid-content bg-purple" />
         </el-col>
@@ -147,7 +145,20 @@ export default {
         this.listLog();
     },
     methods: {
+        celldbclick(row, column, cell, event){
 
+            console.log(row, column, cell, event);
+
+            if (column.property=='blob'){
+
+            }else{
+                this.$router.push(
+                    {
+                        path:"/note/"+row.id,
+                    }
+                )
+            }
+        },
         resetheight() {
             this.maintable.height = window.innerHeight - 150 + 'px'
         },
