@@ -97,7 +97,7 @@ export default {
             titlequery: '',
             detailquery: '',
             reviewquery: '',
-            currentpage:0,
+            currentpage:1,
             pagesize:20,
             List: [],
             QuadrantOptions: Quadrant,
@@ -170,7 +170,7 @@ export default {
                 query.review = this.reviewquery
             }
             
-            query.offset=this.currentpage*this.pagesize
+            query.offset=(this.currentpage-1)*this.pagesize
             query.limit=this.pagesize
             
             const loglist = await getLogList(query)
