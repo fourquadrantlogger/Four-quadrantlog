@@ -26,7 +26,6 @@ app.use(ElementPlus, {
   locale: zhCn,
 })
 
- 
 
 
 // 注意：在服务器端，你需要手动跳转到初始地址。

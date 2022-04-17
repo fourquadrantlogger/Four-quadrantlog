@@ -10,6 +10,10 @@ export const router =  createRouter({
       component: () => import('./pages/Note.vue'),
     },
     { 
+      path: '/',
+      component: () => import('./pages/Dashboard.vue'),
+    },
+    { 
       path: '/md',
       component: () => import('./pages/MD.vue'),
     },
