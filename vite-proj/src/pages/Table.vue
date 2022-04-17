@@ -36,7 +36,7 @@
     <el-row>
         <el-scrollbar :style="maintable">
             <el-table class="table-content" :data="List" border show-summary>
-                <el-table-column prop="quadrant" label="象限" width="100px" solt="size">
+                <el-table-column prop="quadrant" label="象限" width="60px" >
                     <template #footer="{ scope }">
                         <slot name="quadrant_slot" :scope="state">
                             <el-input v-if="scope.row[scope.column.property + 'isShow']" :ref="scope.column.property"
@@ -45,12 +45,12 @@
                         </slot>
                     </template>
                 </el-table-column>>
-                <el-table-column prop="ctime" label="时间" width="180" />
-                <el-table-column prop="location" label="地址" />
-                <el-table-column prop="atype" label="类别" />
-                <el-table-column prop="title" label="标题" width="180" />
-                <el-table-column prop="detail" label="详情" />
-                <el-table-column prop="review" label="回顾" />
+                <el-table-column prop="ctime" label="时间" width="110px" />
+                <el-table-column prop="location" label="地址"  width="200px"/>
+                <el-table-column prop="atype" label="类别"  width="120px"/>
+                <el-table-column prop="title" label="标题" width="200px" />
+                <el-table-column prop="detail" label="详情"  width="calc(100% - 790px)"/>
+                <el-table-column prop="review" label="回顾"  width="100px"/>
             </el-table>
         </el-scrollbar>
     </el-row>
