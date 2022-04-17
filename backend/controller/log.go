@@ -7,6 +7,7 @@ import (
 	"fourquadrantlog/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -15,13 +16,15 @@ func GetLogs(c *gin.Context) {
 	var start, end time.Time
 	var offset, limit = 0, 20
 	if c.Query("start") != "" {
-		o, err := xtime.Parse(c.Query("start"))
+		startStr, _ := url.QueryUnescape(c.Query("start"))
+		o, err := xtime.Parse(startStr)
 		if err == nil {
 			start = o
 		}
 	}
 	if c.Query("end") != "" {
-		o, err := xtime.Parse(c.Query("end"))
+		endStr, _ := url.QueryUnescape(c.Query("end"))
+		o, err := xtime.Parse(endStr)
 		if err == nil {
 			end = o
 		}
