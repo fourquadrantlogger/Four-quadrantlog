@@ -144,6 +144,8 @@ export default {
         },
     },
     mounted: function () {
+        console.log(this.$route.query)
+        this.atypequery=this.$route.query.atypequery;
         this.listLog();
     },
     methods: {

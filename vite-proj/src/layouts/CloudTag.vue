@@ -94,8 +94,14 @@ export default {
             };
             console.log("tagcom.worddata", tagcom.$data.worddata)
             myChart.setOption(option);
-            myChart.on('click', function (params) {
-                console.log('myChart----click---:', params, '------', params.data)
+            myChart.on('click', function (ps) {
+                console.log('myChart----click---:', ps, '------', ps.data)
+                tagcom.$router.push({
+                    path:"/table",
+                    query:{
+                        'atypequery':ps.data.name,
+                    }
+                })
             });
         },
         async tagLog() {
