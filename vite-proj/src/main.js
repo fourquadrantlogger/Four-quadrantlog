@@ -19,7 +19,9 @@ const app  = createApp({
 //确保 _use_ 路由实例使
 //整个应用支持路由。
 app.use(router)
-app.use(ElementPlus)
+app.use(ElementPlus, {
+  locale: zhCn,
+})
 
  
 
