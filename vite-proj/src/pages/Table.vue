@@ -73,8 +73,20 @@
         <el-table-column prop="detail" label="详情" />
         <el-table-column prop="review" label="回顾" />
     </el-table>
-    <el-pagination  v-model:currentPage="currentpage" background layout="prev, pager, next" :total="1000" @current-change="pagequery"/>
-</template>
+     <el-row :gutter="20">
+    <el-col :span="4"><div class="grid-content bg-purple" /></el-col>
+    <el-col :span="16"><div class="grid-content bg-purple" />
+
+    <el-pagination 
+     v-model:currentPage="currentpage" 
+     background layout="prev, pager, next" :total="1000" 
+     style="width:100%;"
+     @current-change="pagequery"/>
+
+    </el-col>
+    <el-col :span="4"><div class="grid-content bg-purple" /></el-col>
+  </el-row>
+  </template>
 <style >
 .maintable{
     height: calc(100% - 100px);
@@ -128,10 +140,10 @@ export default {
         reviewquery: function (v) {
             this.listLog()
         },
-        pagequery: function (v) {
+        currentpage: function (v) {
             this.listLog()
         },
-        pagesizequery: function (v) {
+        pagesize: function (v) {
             this.listLog()
         },
     },
