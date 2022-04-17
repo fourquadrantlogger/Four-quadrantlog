@@ -22,7 +22,7 @@ export default {
     },
    
     mounted:function () {
- 
+        this.log={};
         if (this.logid!=0&&this.logid!=undefined){
              this.showlog()  
         }

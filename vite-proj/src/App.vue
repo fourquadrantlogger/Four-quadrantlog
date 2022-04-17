@@ -20,10 +20,10 @@
                     </template>
                     <el-menu-item-group>
                         <template #title><span>创建</span></template>
-                        <el-menu-item index="1-1" @click="this.$router.push('/note')">文本</el-menu-item>
+                        <el-menu-item index="1-1" @click="menuclick('/note')">文本</el-menu-item>
                     </el-menu-item-group>
                     <el-menu-item-group title="查询">
-                        <el-menu-item index="1-3" @click="this.$router.push('/table')">表格</el-menu-item>
+                        <el-menu-item index="1-3" @click="menuclick('/table')">表格</el-menu-item>
                     </el-menu-item-group>
                 </el-sub-menu>
                 <el-menu-item index="2">
@@ -65,6 +65,15 @@ import {
     Setting,
 } from '@element-plus/icons-vue'
 
+import { useRouter } from "vue-router";
+ 
+
+const menuclick = (path: string) => {
+     console.log(path)
+    const router = useRouter();
+    router.push(path)
+   
+}
 const isCollapse = ref(false)
 const handleOpen = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
