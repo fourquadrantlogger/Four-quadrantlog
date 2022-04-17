@@ -45,7 +45,7 @@
                         </slot>
                     </template>
                 </el-table-column>>
-                <el-table-column prop="ctime" label="时间" width="110px" />
+                <el-table-column prop="ctime" label="时间" width="110px"> </el-table-column>
                 <el-table-column prop="location" label="地址" width="200px" />
                 <el-table-column prop="atype" label="类别" width="120px" />
                 <el-table-column prop="title" label="标题" width="200px" />
@@ -80,7 +80,7 @@
 <script >
 import { getLogList, Quadrant } from '../apis/apis'
 import { ElMessage } from 'element-plus'
-
+import {GetZhWeekDay} from '../xutil/xtime'
 export default {
     created() {
         this.resetheight()
@@ -145,7 +145,7 @@ export default {
     },
     mounted: function () {
         console.log(this.$route.query)
-        this.atypequery=this.$route.query.atypequery;
+        this.atypequery = this.$route.query.atypequery;
         this.listLog();
     },
     methods: {
@@ -204,6 +204,10 @@ export default {
             const loglist = await getLogList(query)
             console.log(loglist)
             this.List = [].concat(loglist.data)
+            for (let i=0;i<this.List.length;i++) {
+                let weekday = GetZhWeekDay(new Date(this.List[i].ctime));
+                this.List[i].ctime=["星期"+weekday,this.List[i].ctime];
+            }
             this.total = loglist.total
             ElMessage.success('获取日志成功')
             return

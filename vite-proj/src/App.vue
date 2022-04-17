@@ -23,6 +23,7 @@
                         <el-menu-item index="1-1" @click="menuclick('/note')">文本</el-menu-item>
                     </el-menu-item-group>
                     <el-menu-item-group title="查询">
+                         <el-menu-item index="1-2" @click="menuclick('/')">词频</el-menu-item>
                         <el-menu-item index="1-3" @click="menuclick('/table')">表格</el-menu-item>
                     </el-menu-item-group>
                 </el-sub-menu>
@@ -66,13 +67,13 @@ import {
 } from '@element-plus/icons-vue'
 
 import { useRouter } from "vue-router";
- 
+
 
     const router = useRouter();
 const menuclick = (path: string) => {
      console.log(path)
    router.push(path)
-   
+
 }
 const isCollapse = ref(false)
 const handleOpen = (key: string, keyPath: string[]) => {

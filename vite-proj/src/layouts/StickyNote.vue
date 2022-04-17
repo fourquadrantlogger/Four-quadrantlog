@@ -12,6 +12,7 @@
             format="YYYY-MM-DD HH:mm:ss"
             value-format="YYYY-MM-DD HH:mm:ss"
         ></el-date-picker>
+        <el-tag class="ml-2" type="success">{{"星期"+new Date(log.ctime).getDay()}}</el-tag>
     </div>
     <div style="display: inline-block">
         <el-select v-model="log.quadrant" multiple placeholder="Select" style="width: 240px">
@@ -24,6 +25,7 @@
 </template>
 <script>
 import {Quadrant} from '../apis/apis'
+import {GetZhWeekDay} from '../xutil/xtime'
 export default {
     props: {
         log: {
