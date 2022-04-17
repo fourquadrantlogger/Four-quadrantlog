@@ -8,6 +8,7 @@
                 type="datetime"
                 placeholder="起始"
                 align="right"
+                value-format="YYYY-MM-DD HH:mm:ss"
                 format="YYYY-MM-DD HH:mm:ss"
             ></el-date-picker>
         </el-col>
@@ -18,6 +19,7 @@
                 type="datetime"
                 placeholder="结束"
                 align="right"
+                value-format="YYYY-MM-DD HH:mm:ss"
                 format="YYYY-MM-DD HH:mm:ss"
             />
         </el-col>
