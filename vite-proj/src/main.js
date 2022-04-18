@@ -11,14 +11,15 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'element-plus/dist/index.css'
  
 // 引入组件库
- 
+import {createPinia} from 'pinia'
 
 
 // 5. 创建并挂载根实例
 const app  = createApp({
   render: ()=>h(App)
 });
-
+const pinia=createPinia()
+app.use(pinia)
 //确保 _use_ 路由实例使
 //整个应用支持路由。
 app.use(router)

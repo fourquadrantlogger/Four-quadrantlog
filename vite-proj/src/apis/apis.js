@@ -34,6 +34,17 @@ export function createlog(d) {
 		data:d,
 	})
 }
+
+export function createblob(d) {
+	return request({
+		url: '/api/blob',
+		method: 'POST',
+		headers:{
+			"Content-Type": "multipart/form-data",
+		},
+		data:d,
+	})
+}
 export function updatelog(d) {
 	return request({
 		url: '/api/log',
