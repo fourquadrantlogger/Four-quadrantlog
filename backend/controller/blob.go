@@ -20,6 +20,7 @@ func GetLog(c *gin.Context) {
 	logid := c.Params.ByName("logid")
 
 	b, err := service.GetBlob(logid)
+	b.Blob = nil
 	if err != nil {
 		c.Error(err)
 	} else {
