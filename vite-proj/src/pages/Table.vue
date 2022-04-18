@@ -153,9 +153,10 @@ export default {
         celldbclick(row, column, cell, event) {
 
             console.log(row, column, cell, event);
-
-            if (column.property == 'blob') {
-
+            
+            let ext=row.title.substring(row.title.lastIndexOf("."))
+            if (ext != '') {
+               window.open('/api/blob/'+row.id,'_blank');
             } else {
                 this.$router.push(
                     {

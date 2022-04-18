@@ -1,143 +1,101 @@
 <template>
-<el-form :model="form" label-width="120px">
-    <el-form-item label="Activity name">
-      <el-input v-model="form.name" />
-    </el-form-item>
+    <h2>{{ logid }}</h2>
+    <snote ref="inote" :log=log></snote>
+     <input type="file"  ref="uploadFiles" placeholder="选择文件">
+    <el-button type="success" @click="createblob()">记录</el-button>
+    <el-input v-model="blobrename" placeholder="重命名为" clearable />
 </template>
-</template>
-<style  >
-</style>
-<script >
-import { getLogList, Quadrant } from '../apis/apis'
+<script>
 import { ElMessage } from 'element-plus'
-
+import { createblob, updatelog, getlog } from '../apis/apis'
+import StickyNote from "../layouts/StickyNote.vue"
+ 
 export default {
-    created() {
-        this.resetheight()
-        window.addEventListener('resize', this.resetheight);
-    },
-    destroyed() {
-        window.removeEventListener('resize', this.resetheight)
-    },
     data() {
         return {
-            form:{
- ctime: '',
-            quadrant: '',
-            atype: '',
-            location: '',
-            title: '',
-            detail: '',
-            review: '',
-            blob:null,
-            },
-            QuadrantOptions: Quadrant,
-    
+            log: {},
+            blobrename:undefined,
         }
     },
-    watch: {
-        ctimeendquery: function (v) {
-            this.listLog()
-        },
-        ctimestartquery: function (v) {
-            this.listLog()
-        },
-        quadrantquery: function (v) {
-            this.listLog()
-        },
-        atypequery: function (v) {
-            this.listLog()
-        },
-        locationquery: function (v) {
-            this.listLog()
-        },
-        titlequery: function (v) {
-            this.listLog()
-        },
-        detailquery: function (v) {
-            this.listLog()
-        },
-        reviewquery: function (v) {
-            this.listLog()
-        },
-        currentpage: function (v) {
-            this.listLog()
-        },
-        pagesize: function (v) {
-            this.listLog()
-        },
+    props: {
+        logid: undefined,
     },
+    components: {
+        'snote': StickyNote,
+    },
+
     mounted: function () {
-        this.listLog();
+        this.log = {};
+        if (this.logid != 0 && this.logid != undefined) {
+            this.showblob()
+        }
     },
+
     methods: {
-        celldbclick(row, column, cell, event){
-
-            console.log(row, column, cell, event);
-
-            if (column.property=='blob'){
-
-            }else{
-                this.$router.push(
-                    {
-                        path:"/note/"+row.id,
-                    }
-                )
-            }
+        async showblob() {
+            let l = await getlog(this.logid)
+            this.log = l
+            l.quadrant = l.quadrant.split('/')
+            console.log(l)
         },
-        resetheight() {
-            this.maintable.height = window.innerHeight - 150 + 'px'
+        async createblob() {
+            if (this.$refs.inote.log.ctime === null) {
+                ElMessage.error("时间必填")
+                return
+            }
+            if (this.$refs.inote.log.title === null) {
+                ElMessage.error("标题必填")
+                return
+            }
+            if (this.$refs.inote.log.atype === null) {
+                ElMessage.error("分类必填")
+                return
+            }
+            if (this.$refs.inote.log.quadrant === null) {
+                ElMessage.error("象限必填")
+                return
+            }
+            var formData = new FormData();
+            formData.append('title', this.$refs.inote.log.title);
+            formData.append('atype', this.$refs.inote.log.atype);
+            formData.append('location', this.$refs.inote.log.location);
+            formData.append('ctime', this.$refs.inote.log.ctime);
+
+            formData.append('detail', this.$refs.inote.log.detail);
+            formData.append('review', this.$refs.inote.log.review);
+             if (this.blobrename != undefined) {
+                 formData.append('blobrename', this.blobrename);
+            }
+            
+            if (this.$refs.uploadFiles.files.length == 0) {
+                ElMessage.warning("请选择文件")
+                return
+            }
+
+            let blob=this.$refs.uploadFiles.files[0]
+
+            formData.append('blob', blob);
+
+
+            if (this.$data.log.quadrant instanceof Array) {
+                let quadrant = this.$data.log.quadrant.join('/')
+                formData.append('quadrant', quadrant);
+            } else {
+                formData.append('quadrant', quadrant);
+            }
+
+            if (this.logid === null || this.logid == undefined) {
+                const clog = await createblob(formData)
+                ElMessage.success("创建成功")
+                this.$router.push('/note/' + clog.data.id)
+            } else {
+                var ll = l
+                ll.id = this.logid
+                await updatelog(ll)
+                ElMessage.success("更新成功")
+            }
+
         },
-        async listLog() {
-            let query = {}
-            if (this.ctimestartquery != null) {
-                query.start = this.ctimestartquery.toLocaleString()
-            }
-            if (this.ctimeendquery != null) {
-                query.end = this.ctimeendquery.toLocaleString()
-            }
-            if (this.quadrantquery != null) {
-                if (this.quadrantquery instanceof Array) {
-                    query.quadrant = this.quadrantquery.join('/')
-                } else {
-                    query.quadrant = this.quadrantquery
-                }
-
-            }
-            if (this.atypequery != undefined) {
-                query.atype = this.atypequery
-            }
-            if (this.locationquery != undefined) {
-                query.location = this.locationquery
-            }
-            if (this.titlequery != undefined) {
-                query.title = this.titlequery
-            }
-            if (this.detailquery != undefined) {
-                query.detail = this.detailquery
-            } if (this.reviewquery != undefined) {
-                query.review = this.reviewquery
-            }
-
-            query.offset = (this.currentpage - 1) * this.pagesize
-            query.limit = this.pagesize
-
-            const loglist = await getLogList(query)
-            console.log(loglist)
-            this.List = [].concat(loglist)
-            ElMessage.success('获取日志成功')
-            return
-        },
-        alterData(row, column) {
-            row[column.property + "isShow"] = false
-            this.refreshTable()
-        },
-
-        refreshTable() {
-            this.randomKey = Math.random()
-        },
-
     },
 }
-
 </script>

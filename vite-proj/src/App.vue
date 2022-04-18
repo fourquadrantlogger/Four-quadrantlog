@@ -21,6 +21,7 @@
                     <el-menu-item-group>
                         <template #title><span>创建</span></template>
                         <el-menu-item index="1-1" @click="menuclick('/note')">文本</el-menu-item>
+                         <el-menu-item index="1-2" @click="menuclick('/form')">文件</el-menu-item>
                     </el-menu-item-group>
                     <el-menu-item-group title="查询">
                          <el-menu-item index="1-2" @click="menuclick('/')">词频</el-menu-item>
