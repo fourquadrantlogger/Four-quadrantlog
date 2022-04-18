@@ -88,13 +88,7 @@ export default {
                 const clog = await createblob(formData)
                 ElMessage.success("创建成功")
                 this.$router.push('/note/' + clog.data.id)
-            } else {
-                var ll = l
-                ll.id = this.logid
-                await updatelog(ll)
-                ElMessage.success("更新成功")
-            }
-
+            }  
         },
     },
 }
