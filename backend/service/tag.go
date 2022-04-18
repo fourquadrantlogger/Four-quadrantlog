@@ -14,7 +14,7 @@ type Tag struct {
 }
 
 func GroupbyTags(start, end time.Time, quadrant int, location, title, detail, review string, limit int) (bs []Tag, err error) {
-	tx, err := mysqlcli.GetMysqlClient()
+	_, tx, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
 	}

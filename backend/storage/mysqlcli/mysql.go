@@ -1,7 +1,9 @@
 package mysqlcli
 
 import (
+	drivemysql "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"os"
@@ -9,9 +11,11 @@ import (
 
 var _db map[string]*gorm.DB = make(map[string]*gorm.DB)
 
-func GetMysqlClient() (_ *gorm.DB, err error) {
+func GetMysqlClient() (cfg *drivemysql.Config, db *gorm.DB, err error) {
 	mysqlconn := os.Getenv("MYSQL")
-	return MysqlClient(mysqlconn)
+	cfg, _ = drivemysql.ParseDSN(mysqlconn)
+	db, err = MysqlClient(mysqlconn)
+	return
 
 }
 func MysqlClient(dsn string) (_ *gorm.DB, err error) {

@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"fourquadrantlog/assist/xlog"
 	"fourquadrantlog/model"
 	"fourquadrantlog/storage/mysqlcli"
@@ -12,7 +13,7 @@ import (
 
 func DeleteLog(id string) (err error) {
 
-	cli, err := mysqlcli.GetMysqlClient()
+	_, cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
 	}
@@ -27,7 +28,7 @@ func DeleteLog(id string) (err error) {
 	return
 }
 func UpdateLog(log *model.Log) (err error) {
-	cli, err := mysqlcli.GetMysqlClient()
+	_, cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
 	}
@@ -40,10 +41,39 @@ func UpdateLog(log *model.Log) (err error) {
 }
 func CreateLog(log *model.Log) (err error) {
 	log.ID = uuid.New().String()
-	cli, err := mysqlcli.GetMysqlClient()
+	cfg, cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
 	}
+	logmodel := Model(cfg.DBName, "log")
+	if log.Detail != nil {
+		detaillen, e := CheckStringLen(*log.Detail)
+		if e != nil {
+			return e
+		}
+		if detaillen.Len > logmodel["detail"].Length {
+			return errors.New("detail text too long," + fmt.Sprint(detaillen.Len) + "/" + fmt.Sprint(logmodel["detail"].Length))
+		}
+	}
+	if log.Review != nil {
+		detaillen, _ := CheckStringLen(*log.Review)
+		if detaillen.Len > logmodel["review"].Length {
+			return errors.New("review text too long," + fmt.Sprint(detaillen.Len) + "/" + fmt.Sprint(logmodel["review"].Length))
+		}
+	}
+	{
+		detaillen, _ := CheckStringLen(log.Title)
+		if detaillen.Len > logmodel["title"].Length {
+			return errors.New("title text too long," + fmt.Sprint(detaillen.Len) + "/" + fmt.Sprint(logmodel["title"].Length))
+		}
+	}
+	{
+		detaillen, _ := CheckStringLen(*log.Location)
+		if detaillen.Len > logmodel["location"].Length {
+			return errors.New("location too long," + fmt.Sprint(detaillen.Len) + "/" + fmt.Sprint(logmodel["location"].Length))
+		}
+	}
+
 	tx := cli.Table("log").Create(log)
 	err = tx.Error
 	if err == nil {
@@ -55,7 +85,7 @@ func CreateLog(log *model.Log) (err error) {
 func CreateBlob(log *model.Blob) (err error) {
 	log.ID = uuid.New().String()
 
-	cli, err := mysqlcli.GetMysqlClient()
+	_, cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 
 		return
@@ -69,7 +99,7 @@ func CreateBlob(log *model.Blob) (err error) {
 }
 func GetBlob(id string) (b model.Blob, err error) {
 
-	cli, err := mysqlcli.GetMysqlClient()
+	_, cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
 	}
@@ -79,7 +109,7 @@ func GetBlob(id string) (b model.Blob, err error) {
 	return
 }
 func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail, review string, offset, limit int, orderby string) (bs []model.Log, total int64, err error) {
-	cli, err := mysqlcli.GetMysqlClient()
+	_, cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
 	}
