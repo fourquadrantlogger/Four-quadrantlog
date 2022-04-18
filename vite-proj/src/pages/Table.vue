@@ -35,7 +35,7 @@
 
     <el-row>
         <el-scrollbar :style="maintable">
-            <el-table class="table-content" @cell-dblclick="celldbclick" :data="List" border show-summary>
+            <el-table class="table-content" @cell-click="gotodetail" :data="List" border show-summary>
                 <el-table-column prop="quadrant" label="象限" width="60px">
                     <template #footer="{ scope }">
                         <slot name="quadrant_slot" :scope="state">
@@ -80,7 +80,7 @@
 <script >
 import { getLogList, Quadrant } from '../apis/apis'
 import { ElMessage } from 'element-plus'
-import {GetZhWeekDay} from '../xutil/xtime'
+import { GetZhWeekDay } from '../xutil/xtime'
 export default {
     created() {
         this.resetheight()
@@ -150,13 +150,15 @@ export default {
     },
     methods: {
 
-        celldbclick(row, column, cell, event) {
+        gotodetail(row, column, cell, event) {
 
             console.log(row, column, cell, event);
-            
-            let ext=row.title.substring(row.title.lastIndexOf("."))
-            if (ext != '') {
-               window.open('/api/blob/'+row.id,'_blank');
+            if (row.title.lastIndexOf(".") > 0) {
+                let ext = row.title.substring(row.title.lastIndexOf("."))
+                if (ext != '') {
+
+                    window.open('/api/blob/' + row.id, '_blank');
+                }
             } else {
                 this.$router.push(
                     {
@@ -205,9 +207,9 @@ export default {
             const loglist = await getLogList(query)
             console.log(loglist)
             this.List = [].concat(loglist.data)
-            for (let i=0;i<this.List.length;i++) {
+            for (let i = 0; i < this.List.length; i++) {
                 let weekday = GetZhWeekDay(new Date(this.List[i].ctime));
-                this.List[i].ctime=["星期"+weekday,this.List[i].ctime];
+                this.List[i].ctime = ["星期" + weekday, this.List[i].ctime];
             }
             this.total = loglist.total
             ElMessage.success('获取日志成功')
