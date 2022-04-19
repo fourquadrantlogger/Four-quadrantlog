@@ -151,21 +151,23 @@ export default {
     methods: {
 
         gotodetail(row, column, cell, event) {
-
             console.log(row, column, cell, event);
-            if (row.title.lastIndexOf(".") > 0) {
-                let ext = row.title.substring(row.title.lastIndexOf("."))
-                if (ext != '') {
-
-                    window.open('/api/blob/' + row.id, '_blank');
-                }
-            } else {
-                this.$router.push(
-                    {
-                        path: "/note/" + row.id,
+            if (column.property == 'title' || column.property == 'detail') {
+                if (row.title.lastIndexOf(".") > 0) {
+                    let ext = row.title.substring(row.title.lastIndexOf("."))
+                    if (ext != '') {
+                        window.open('/api/blob/' + row.id, '_blank');
                     }
-                )
+                } else {
+                    this.$router.push(
+                        {
+                            path: "/note/" + row.id,
+                        }
+                    )
+                }
             }
+
+
         },
         resetheight() {
             this.maintable.height = window.innerHeight - 150 + 'px'
