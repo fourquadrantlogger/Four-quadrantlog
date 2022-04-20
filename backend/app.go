@@ -15,6 +15,7 @@ func main() {
 	r.PUT("/api/log", controller.UpdateLog)
 	r.DELETE("/api/log:logid", controller.DeleteLog)
 	r.GET("/api/blob/:blobid", controller.GetBlob)
+	r.GET("/api/blob/:blobid/compress", controller.GetCompressed)
 	r.GET("/api/log/:logid", controller.GetLog)
 	r.GET("/api/log", controller.GetLogs)
 	r.GET("/api/tag", controller.GetTags)

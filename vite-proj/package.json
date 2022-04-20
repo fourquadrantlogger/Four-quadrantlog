@@ -13,7 +13,8 @@
     "echarts-wordcloud": "^2.0.0",
     "element-plus": "^2.1.7",
     "pinia": "^2.0.13",
-    "vue": "^3.2.25",
+    "vue": "^3.2.31",
+    "vue-loader": "^17.0.0",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {

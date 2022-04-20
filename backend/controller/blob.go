@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"fourquadrantlog/assist/compress"
 	"fourquadrantlog/assist/xlog"
 	"fourquadrantlog/assist/xtime"
 	"fourquadrantlog/model"
@@ -33,6 +34,7 @@ func GetBlob(c *gin.Context) {
 	blobid := c.Params.ByName("blobid")
 
 	b, err := service.GetBlob(blobid)
+
 	if err != nil {
 		c.Error(err)
 	} else {
@@ -40,6 +42,28 @@ func GetBlob(c *gin.Context) {
 		b.FixShow()
 		c.Data(200, contentType, b.Blob)
 	}
+}
+
+func GetCompressed(c *gin.Context) {
+	blobid := c.Params.ByName("blobid")
+
+	b, err := service.GetBlob(blobid)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	ext:=strings.ToLower(path.Ext(b.Title))
+	if ext==".jpg"||ext==".jpeg"{
+		b.Blob,err=compress.CompressJpeg(b.Blob,30)
+		if err != nil {
+			c.Error(err)
+		} else {
+			contentType := http.DetectContentType(b.Blob)
+			b.FixShow()
+			c.Data(200, contentType, b.Blob)
+		}
+	}
+
 }
 
 func CreateBlob(c *gin.Context) {
