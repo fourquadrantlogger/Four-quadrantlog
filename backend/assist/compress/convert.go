@@ -5,24 +5,25 @@ import (
 	"fourquadrantlog/assist/xlog"
 	"go.uber.org/zap"
 	"image/jpeg"
+	"image/png"
 )
 
-func CompressJpeg(imgraw []byte, quality int) (compressed []byte, err error) {
+func Png2Jpeg(imgraw []byte, quality int) (compressed []byte, err error) {
 	reader := bytes.NewReader(imgraw)
-	img, err := jpeg.Decode(reader)
+	img, err := png.Decode(reader)
 	if err != nil {
-		xlog.Logger.Warn("jpeg.Decode::", zap.Error(err))
+		xlog.Logger.Warn("png.Decode::", zap.Error(err))
 		return
 	}
 
 	//保存到新文件中
 
+	// 转jpg
+
 	newfile := bytes.NewBuffer(compressed)
 	if err != nil {
 		return
 	}
-
-	// &jpeg.Options{Quality: 10} 图片压缩质量
 	err = jpeg.Encode(newfile, img, &jpeg.Options{Quality: quality})
 	if err != nil {
 		xlog.Logger.Warn("jpeg.Encode::", zap.Error(err))

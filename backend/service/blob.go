@@ -23,6 +23,7 @@ func CreateBlob(log *model.Blob) (err error) {
 	}
 	return
 }
+
 func GetBlob(id string) (b model.Blob, err error) {
 
 	_, cli, err := mysqlcli.GetMysqlClient()

@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -52,18 +53,29 @@ func GetCompressed(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	ext:=strings.ToLower(path.Ext(b.Title))
-	if ext==".jpg"||ext==".jpeg"{
-		b.Blob,err=compress.CompressJpeg(b.Blob,30)
+	ext := strings.ToLower(path.Ext(b.Title))
+	quality := 30
+	if c.Query("quality") != "" {
+		quality, _ = strconv.Atoi(c.Query("quality"))
+	}
+	if ext == ".jpg" || ext == ".jpeg" {
+		b.Blob, err = compress.CompressJpeg(b.Blob, quality)
 		if err != nil {
 			c.Error(err)
 		} else {
-			contentType := http.DetectContentType(b.Blob)
-			b.FixShow()
+			contentType := "image/jpeg"
 			c.Data(200, contentType, b.Blob)
 		}
 	}
-
+	if ext == ".png" {
+		b.Blob, err = compress.Png2Jpeg(b.Blob, quality)
+		if err != nil {
+			c.Error(err)
+		} else {
+			contentType := "image/jpeg"
+			c.Data(200, contentType, b.Blob)
+		}
+	}
 }
 
 func CreateBlob(c *gin.Context) {
