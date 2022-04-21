@@ -33,14 +33,14 @@ json_table(
 		swhere = swhere + (" quadrant = " + fmt.Sprint(quadrant) + " and ")
 	}
 	if start.Unix() != (time.Time{}.Unix()) {
-		swhere = swhere + (" ctime  >= " + fmt.Sprint(start) + " and ")
+		swhere = swhere + (" ctime  >= '" + fmt.Sprint(start) + "' and ")
 	}
 	if end.Unix() != (time.Time{}.Unix()) {
 
-		swhere = swhere + (" ctime <= " + fmt.Sprint(end) + " and ")
+		swhere = swhere + (" ctime <= '" + fmt.Sprint(end) + "' and ")
 	}
 	if location != "" {
-		swhere = swhere + (" location like   " + "%" + location + "%" + " and ")
+		swhere = swhere + (" location like  %" + location + "% and ")
 	}
 
 	if title != "" {
@@ -59,7 +59,6 @@ json_table(
 	err = tx.Raw(s).Scan(&bs).Error
 
 	if err != nil {
-		panic(err)
 		xlog.Logger.Error("sql", zap.Error(err))
 		return
 	}

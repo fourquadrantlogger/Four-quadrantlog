@@ -113,40 +113,54 @@ export default {
     },
     watch: {
         ctimeendquery: function (v) {
+            console.log(v)
             this.listLog()
         },
         ctimestartquery: function (v) {
+            console.log(v)
             this.listLog()
         },
         quadrantquery: function (v) {
-            this.listLog()
+
+            console.log(v)
+            if (v.length >= 0) {
+                this.listLog()
+            }
+
         },
         atypequery: function (v) {
+            console.log(v)
             this.listLog()
         },
         locationquery: function (v) {
+            console.log(v)
             this.listLog()
         },
         titlequery: function (v) {
+            console.log(v)
             this.listLog()
         },
         detailquery: function (v) {
+            console.log(v)
             this.listLog()
         },
         reviewquery: function (v) {
+            console.log(v)
             this.listLog()
         },
         currentpage: function (v) {
+            console.log(v)
             this.listLog()
         },
         pagesize: function (v) {
+            console.log(v)
             this.listLog()
         },
     },
     mounted: function () {
         console.log(this.$route.query)
         this.atypequery = this.$route.query.atypequery;
-        this.listLog();
+       // this.listLog();
     },
     methods: {
 

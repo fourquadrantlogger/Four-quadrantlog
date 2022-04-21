@@ -106,7 +106,11 @@ export default {
         },
         async tagLog() {
             let query = {}
-            query.limit = 20
+            query.limit = 40
+            
+            let start = new Date()
+            start.setMonth (start.getMonth ()-3);
+            query.start=start.toLocaleString()
             // if (this.ctimestartquery != null) {
             //     query.start = this.ctimestartquery.toLocaleString()
             // }
