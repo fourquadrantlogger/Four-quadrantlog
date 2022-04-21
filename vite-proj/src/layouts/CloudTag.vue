@@ -1,5 +1,5 @@
 <template>
-    <div id="mywordcloud" :style="{ width: '100%', height: '300px' }" :data="worddata"></div>
+    <div id="mywordcloud" :style="{ width: '100%', height: '600px' }" :data="worddata"></div>
 
 </template>
 <script lang="javascript">
