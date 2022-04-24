@@ -4,6 +4,9 @@ import App from './App.vue'
 // 状态
 import store from './store'
 
+// 简易路由
+import router from './router'
+
 // 设置icon
 import installIcon from './icon/index.js'
 
@@ -21,7 +24,7 @@ import db from './storage'
 
 db()
 
-createApp(App)
+createApp(App).use(router) // 路由
   .use(store)
   .use(installIcon) // 注册全局图标
   .use(ElementPlus, { locale: zhCn, size: 'small' }) // UI库

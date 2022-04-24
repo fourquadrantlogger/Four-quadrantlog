@@ -52,7 +52,7 @@
   const _find = defineAsyncComponent(() => import('./components/find.vue'))
   // 按钮组件 -- 延迟加载
   const _button = defineAsyncComponent(() => import('./components/button.vue'))
- 
+
 </script>
 
 <script setup>
@@ -78,7 +78,4 @@
     delayKind.find = 'find'
     delayKind.button = 'button'
   }, 1)
- 
-
 </script>
-
