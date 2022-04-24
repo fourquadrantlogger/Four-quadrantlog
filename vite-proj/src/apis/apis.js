@@ -7,7 +7,13 @@ export const Quadrant= [
 	'社会关系',
 	'持有物'
 ]
-
+export function getTagList(params) {
+	return request({
+		url: '/api/tag',
+		method: 'get',
+		params
+	})
+}
 export function getLogList(params) {
 	return request({
 		url: '/api/log',

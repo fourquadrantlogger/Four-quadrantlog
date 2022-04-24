@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-fourquadrantlog-web-service
+  labels:
+    app: {{ .Release.Name }}-fourquadrantlog-web
+spec:
+  ports:
+    - name: web-port
+      port: 3000
+#  clusterIP: None
+  selector:
+    app: {{ .Release.Name }}-fourquadrantlog-web

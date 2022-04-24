@@ -2,40 +2,36 @@ package controller
 
 import (
 	"errors"
-	"fmt"
+	"fourquadrantlog/assist/xtime"
 	"fourquadrantlog/model"
 	"fourquadrantlog/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 )
+
+type CommonQuery struct {
+	Data  interface{} `json:"data"`
+	Total int64       `json:"total"`
+}
 
 func GetLogs(c *gin.Context) {
 	var start, end time.Time
 	var offset, limit = 0, 20
 	if c.Query("start") != "" {
-		fmt.Println(c.Query("start"))
-		o, _ := time.Parse("2006/1/2 15:04:05", c.Query("start"))
-		if o.Unix() != 0 {
+		startStr, _ := url.QueryUnescape(c.Query("start"))
+		o, err := xtime.Parse(startStr)
+		if err == nil {
 			start = o
-		} else {
-			o, _ = time.Parse("2006-01-02", c.Query("start"))
-			if o.Unix() != 0 {
-				start = o
-			}
 		}
-
 	}
 	if c.Query("end") != "" {
-		o, _ := time.Parse("2006/1/2 15:04:05", c.Query("end"))
-		if o.Unix() != 0 {
+		endStr, _ := url.QueryUnescape(c.Query("end"))
+		o, err := xtime.Parse(endStr)
+		if err == nil {
 			end = o
-		} else {
-			o, _ = time.Parse("2006-01-02", c.Query("end"))
-			if o.Unix() != 0 {
-				end = o
-			}
 		}
 	}
 	if c.Query("offset") != "" {
@@ -51,7 +47,7 @@ func GetLogs(c *gin.Context) {
 		}
 	}
 	var quadrantint int = model.Quadrant2Int(c.Query("quadrant"))
-	b, err := service.GetLogs(start, end,
+	b, total, err := service.GetLogs(start, end,
 		quadrantint,
 		c.Query("location"),
 		c.Query("atype"),
@@ -68,18 +64,23 @@ func GetLogs(c *gin.Context) {
 		for i, _ := range b {
 			b[i].FixShow()
 		}
-		c.JSON(200, b)
+		c.JSON(200, CommonQuery{
+			Data:  b,
+			Total: total,
+		})
 	}
 }
 func CreateLog(c *gin.Context) {
 	var log model.Log
 	if c.Bind(&log) == nil {
 		if log.Ctime_ != "" {
-			log.Ctime, _ = time.Parse("2006-01-02 15:04:05", log.Ctime_)
+			var e error
+			log.Ctime, e = xtime.Parse(log.Ctime_)
+			if e != nil {
+				log.Ctime = time.Now()
+			}
 		}
-		if log.Ctime.Unix() == (time.Time{}.Unix()) {
-			log.Ctime = time.Now()
-		}
+
 		log.FixForDB()
 		err := service.CreateLog(&log)
 		if err != nil {
@@ -107,7 +108,7 @@ func UpdateLog(c *gin.Context) {
 		if log.Ctime.Unix() == (time.Time{}.Unix()) {
 			log.Ctime = time.Now()
 		}
-
+		log.FixForDB()
 		err := service.UpdateLog(&log)
 		if err != nil {
 			c.Error(err)

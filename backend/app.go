@@ -17,6 +17,10 @@ func main() {
 	r.GET("/api/blob/:blobid", controller.GetBlob)
 	r.GET("/api/log/:logid", controller.GetLog)
 	r.GET("/api/log", controller.GetLogs)
+	r.GET("/api/tag", controller.GetTags)
 
+	if os.Getenv("APISERVER_PORT") == "" {
+		os.Setenv("APISERVER_PORT", "10008")
+	}
 	r.Run(":" + os.Getenv("APISERVER_PORT"))
 }

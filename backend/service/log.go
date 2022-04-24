@@ -78,37 +78,48 @@ func GetBlob(id string) (b model.Blob, err error) {
 
 	return
 }
-func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail, review string, offset, limit int, orderby string) (bs []model.Log, err error) {
+func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail, review string, offset, limit int, orderby string) (bs []model.Log, total int64, err error) {
 	cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
 	}
 	tx := cli.Table("log")
+	txtotal := cli.Table("log")
+
 	if quadrant > 0 {
 		tx = tx.Where("quadrant = ?", quadrant)
+		txtotal = txtotal.Where("quadrant = ?", quadrant)
 	}
 	if start.Unix() != (time.Time{}.Unix()) {
 		tx = tx.Where("ctime >= ?", start)
+		txtotal = txtotal.Where("ctime >= ?", start)
 	}
 	if end.Unix() != (time.Time{}.Unix()) {
 		tx = tx.Where("ctime <= ?", end)
+		txtotal = txtotal.Where("ctime <= ?", end)
 	}
 	if location != "" {
 		//"name LIKE ?", "%jin%"
 		tx = tx.Where("location like ?", "%"+location+"%")
+		txtotal = txtotal.Where("location like ?", "%"+location+"%")
 	}
 	if atype != "" {
 		tx = tx.Where("atype like ?", "%"+atype+"%")
+		txtotal = txtotal.Where("atype like ?", "%"+atype+"%")
 	}
 	if title != "" {
 		tx = tx.Where("title like ?", "%"+title+"%")
+		txtotal = txtotal.Where("title like ?", "%"+title+"%")
 	}
 	if detail != "" {
 		tx = tx.Where("detail like ?", "%"+detail+"%")
+		txtotal = txtotal.Where("detail like ?", "%"+detail+"%")
 	}
 	if review != "" {
 		tx = tx.Where("review like ?", "%"+review+"%")
+		txtotal = txtotal.Where("review like ?", "%"+review+"%")
 	}
+
 	tx = tx.Offset(offset).Limit(limit)
 	if orderby != "" {
 		tx = tx.Order(orderby)
@@ -123,5 +134,11 @@ func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail,
 		return
 	}
 
+	err = txtotal.Count(&total).Error
+	if err != nil {
+		panic(err)
+		xlog.Logger.Error("sql", zap.Error(err))
+		return
+	}
 	return
 }
