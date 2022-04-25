@@ -63,6 +63,14 @@ func GetLogs(c *gin.Context) {
 	} else {
 		for i, _ := range b {
 			b[i].FixShow()
+			if len(*b[i].Detail) > 100 {
+				var detail = (*b[i].Detail)[:100]
+				b[i].Detail = &detail
+			}
+			if len(*b[i].Review) > 100 {
+				var detail = (*b[i].Review)[:100]
+				b[i].Review = &detail
+			}
 		}
 		c.JSON(200, CommonQuery{
 			Data:  b,
