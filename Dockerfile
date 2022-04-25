@@ -18,9 +18,11 @@ RUN apt update -y &&\
     rsync
 RUN v=1.18 && wget  "https://dl.google.com/go/go${v}.linux-amd64.tar.gz"  --progress=bar:force 2>&1 &&tar xzvf "go${v}.linux-amd64.tar.gz" && pwd
 
-ENV NODE_VERSION=16.x
-RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION} | bash -
-RUN apt-get install -y nodejs && npm i -g corepack && corepack enable
+ENV NODE_VERSION=16.14.2
+RUN curl -LO https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz &&\
+    tar -xvf node-v${NODE_VERSION}-linux-x64.tar.xz
+ENV PATH=${PATH}:/node-v${NODE_VERSION}-linux-x64/bin
+RUN npm i -g corepack && corepack enable
 
 WORKDIR /opt/project
 COPY backend backend

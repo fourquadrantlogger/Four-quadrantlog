@@ -68,8 +68,8 @@ func GetLogs(c *gin.Context) {
 				b[i].Detail = &detail
 			}
 			if len(*b[i].Review) > 100 {
-				var detail = (*b[i].Review)[:100]
-				b[i].Review = &detail
+				var review = (*b[i].Review)[:100]
+				b[i].Review = &review
 			}
 		}
 		c.JSON(200, CommonQuery{
