@@ -21,37 +21,56 @@
 <script>
   import { reactive, watch, onMounted, nextTick } from 'vue'
   import { store } from '@naturefw/nf-state'
-  import { ElCol, ElRow, ElSlider } from 'element-plus'
+  import { ElCol, ElRow } from 'element-plus'
   // import { createModel, lifecycle } from '@naturefw/ui-core'
-  // 局部状态
+  // 列表局部状态
   import { getListState } from '../controller/state-list.js'
+  // 表单状态
   import { regFormState } from '../controller/state-form.js'
 
-</script>
+  export default {
+    name: 'form-log',
+    components: {
+      ElCol,
+      ElRow
+    },
+    props: {
+      moduleId: [Number, String],
+      dataId: [Number, String],
+      formMetaId: [Number, String],
+      actionId: [Number, String],
+      type: [Number, String],
+      dialogInfo: [Object]
+    },
+    setup () {
+      // 获取列表状态
+      const listState = getListState()
 
-<script setup>
-  const props = defineProps({
-    moduleId: [Number, String],
-    dataId: [Number, String],
-    formMetaId: [Number, String],
-    actionId: [Number, String],
-    type: [Number, String],
-    dialogInfo: [Object]
-  })
+      // 注册表单状态
+      const model = regFormState()
 
-  // 获取列表状态
-  const state = getListState()
+      // 获取表单控件需要的meta
+      const { formMeta } = store.meta[listState.moduleId]
 
-  // 注册表单状态
-  const modelManage = regFormState()
-  const model = modelManage.model
+      // 监听 dataID 的变化
+      watch(() => listState.selection.dataId, (id) => {
+        console.log('记录ID的变化：', id)
+        console.log('props：', props)
+      })
 
-  // 获取表单控件需要的meta
-  const { formMeta } = store.meta[state.moduleId]
+      // 添加或者修改
+      const save = () => {
+        // 添加
+        model.addNew()
+        // 更新列表
+        listState.loadData(true)
+      }
 
-  // 添加或者修改
-  const save = () => {
-    modelManage.submit()
+      return {
+        model,
+        formMeta,
+        save
+      }
+    }
   }
-
 </script>

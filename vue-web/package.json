@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@naturefw/nf-state": "^0.3.4",
-    "@naturefw/ui-elp": "^0.1.12",
+    "@naturefw/ui-elp": "^0.1.14",
     "element-plus": "^2.1.9",
     "vue": "^3.2.25"
   },

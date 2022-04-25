@@ -16,11 +16,12 @@
     <el-container>
       <!--左侧边栏-->
       <el-aside width="230px">
-        <!--菜单-->
-        <menus></menus>
+        <!--菜单 <menus></menus> -->
+        <nf-menu/>
       </el-aside>
       <el-main>
         <!--编辑区域-->
+        <nf-router-view></nf-router-view>
         <component
           :is="delay[delayKind]"
         >

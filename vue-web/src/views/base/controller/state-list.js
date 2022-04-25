@@ -9,16 +9,15 @@ const flag = Symbol('pager001')
 /**
  * 注册局部状态，用 provide 注入
  * 数据列表用
- * @returns 
+ * @returns
  */
 const regListState = () => {
-
   // 定义 列表用的状态
   const state = defineStore(flag, {
     state: () => {
       return {
         moduleId: 0, // 模块ID
-        dataList: [],  // 数据列表
+        dataList: [], // 数据列表
         findValue: {}, // 查询条件的精简形式
         findArray: [], // 查询条件的对象形式
         pagerInfo: { // 分页信息
@@ -36,12 +35,16 @@ const regListState = () => {
       }
     },
     getters: {
-      nameTest() {
+      nameTest () {
         return this.name + '_通过 getter 获取'
       }
     },
     actions: {
-      async loadData(isReset = false) {
+      /**
+       * 加载数据，
+       * @param {*} isReset true：设置总数，页号设置为1；false：仅翻页
+       */
+      async loadData (isReset = false) {
         const dbHelp = store.web.dbHelp
         const pager = {
           count: this.pagerInfo.pagerSize,
@@ -53,13 +56,15 @@ const regListState = () => {
           this.dataList.push(...list.dataList)
         }
         if (isReset) {
-          this.pagerInfo.count = list.allCount === 0  ? 1 : list.allCount
+          this.pagerInfo.count = list.allCount === 0 ? 1 : list.allCount
           this.pagerInfo.pagerIndex = 1
         }
       }
     }
-  },{isLocal: true})
-  
+  },
+  { isLocal: true }
+  )
+
   // 初始化
   state.loadData(true)
 
@@ -74,17 +79,15 @@ const regListState = () => {
   })
 
   return state
-
 }
 
 /**
  * 用 inject 获取状态
- * @returns 
+ * @returns
  */
 const getListState = () => {
   return useStore(flag)
 }
-
 
 export {
   getListState,
