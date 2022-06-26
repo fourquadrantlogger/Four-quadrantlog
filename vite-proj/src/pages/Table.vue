@@ -1,79 +1,113 @@
 <template>
-    <el-row style="height:50px;">
-        <el-col :span="3">
-            <div class="grid-content bg-purple" />
-            <el-date-picker v-model="ctimestartquery" type="datetime" placeholder="起始" align="right"
-                value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss"></el-date-picker>
-        </el-col>
-        <el-col :span="3">
-            <div class="grid-content bg-purple-light" />
-            <el-date-picker v-model="ctimeendquery" type="datetime" placeholder="结束" align="right"
-                value-format="YYYY-MM-DD HH:mm:ss" format="YYYY-MM-DD HH:mm:ss" />
-        </el-col>
-        <el-col :span="3">
-            <el-select v-model="quadrantquery" multiple placeholder="象限">
-                <el-option v-for="item in QuadrantOptions" :key="item" :label="item" :value="item" />
-            </el-select>
-        </el-col>
+  <el-row style="height: 50px">
+    <el-col :span="3">
+      <div class="grid-content bg-purple" />
+      <el-date-picker
+        v-model="ctimestartquery"
+        type="datetime"
+        placeholder="起始"
+        align="right"
+        value-format="YYYY-MM-DD HH:mm:ss"
+        format="YYYY-MM-DD HH:mm:ss"
+      ></el-date-picker>
+    </el-col>
+    <el-col :span="3">
+      <div class="grid-content bg-purple-light" />
+      <el-date-picker
+        v-model="ctimeendquery"
+        type="datetime"
+        placeholder="结束"
+        align="right"
+        value-format="YYYY-MM-DD HH:mm:ss"
+        format="YYYY-MM-DD HH:mm:ss"
+      />
+    </el-col>
+    <el-col :span="3">
+      <el-select v-model="quadrantquery" multiple placeholder="象限">
+        <el-option
+          v-for="item in QuadrantOptions"
+          :key="item"
+          :label="item"
+          :value="item"
+        />
+      </el-select>
+    </el-col>
 
-        <el-col :span="3">
-            <el-input v-model="atypequery" placeholder="类别" />
-        </el-col>
+    <el-col :span="3">
+      <el-input v-model="atypequery" placeholder="类别" />
+    </el-col>
 
-        <el-col :span="4">
-            <el-input v-model="titlequery" placeholder="标题" />
-        </el-col>
+    <el-col :span="4">
+      <el-input v-model="titlequery" placeholder="标题" />
+    </el-col>
 
-        <el-col :span="4">
-            <el-input v-model="detailquery" placeholder="详情" />
-        </el-col>
+    <el-col :span="4">
+      <el-input v-model="detailquery" placeholder="详情" />
+    </el-col>
 
-        <el-col :span="4">
-            <el-input v-model="reviewquery" placeholder="回顾" />
-        </el-col>
-    </el-row>
+    <el-col :span="4">
+      <el-input v-model="reviewquery" placeholder="回顾" />
+    </el-col>
+  </el-row>
 
-    <el-row>
-        <el-scrollbar :style="maintable">
-            <el-table class="table-content" @cell-click="gotodetail" :data="List" border show-summary>
-                <el-table-column prop="quadrant" label="象限" width="60px">
-                    <template #footer="{ scope }">
-                        <slot name="quadrant_slot" :scope="state">
-                            <el-input v-if="scope.row[scope.column.property + 'isShow']" :ref="scope.column.property"
-                                v-model="scope.row.quadrant" @blur="alterData(scope.row, scope.column)"></el-input>
-                            <span v-else>{{ scope.row.quadrant }}</span>
-                        </slot>
-                    </template>
-                </el-table-column>>
-                <el-table-column prop="ctime" label="时间" width="110px"> </el-table-column>
-                <el-table-column prop="location" label="地址" width="200px" />
-                <el-table-column prop="atype" label="类别" width="120px" />
-                <el-table-column prop="title" label="标题" width="200px" />
-                <el-table-column prop="detail" label="详情" width="calc(100% - 790px)" />
-                <el-table-column prop="review" label="回顾" width="100px" />
-            </el-table>
-        </el-scrollbar>
-    </el-row>
+  <el-row>
+    <el-scrollbar :style="maintable">
+      <el-table
+        class="table-content"
+        @cell-click="gotodetail"
+        :data="List"
+        border
+        show-summary
+      >
+        <el-table-column prop="quadrant" label="象限" width="60px">
+          <template #footer="{ scope }">
+            <slot name="quadrant_slot" :scope="state">
+              <el-input
+                v-if="scope.row[scope.column.property + 'isShow']"
+                :ref="scope.column.property"
+                v-model="scope.row.quadrant"
+                @blur="alterData(scope.row, scope.column)"
+              ></el-input>
+              <span v-else>{{ scope.row.quadrant }}</span>
+            </slot>
+          </template> </el-table-column
+        >>
+        <el-table-column prop="ctime" label="时间" width="110px">
+        </el-table-column>
+        <el-table-column prop="location" label="地址" width="200px" />
+        <el-table-column prop="atype" label="类别" width="120px" />
+        <el-table-column prop="title" label="标题" width="200px" />
+        <el-table-column
+          prop="detail"
+          label="详情"
+          width="calc(100% - 790px)"
+        />
+        <el-table-column prop="review" label="回顾" width="100px" />
+      </el-table>
+    </el-scrollbar>
+  </el-row>
 
-    <el-row :gutter="20">
-        <el-col :span="4">
-            <div class="grid-content bg-purple" />
-        </el-col>
-        <el-col :span="16">
-            <div class="grid-content bg-purple" />
+  <el-row :gutter="20">
+    <el-col :span="4">
+      <div class="grid-content bg-purple" />
+    </el-col>
+    <el-col :span="16">
+      <div class="grid-content bg-purple" />
 
-            <div class="grid-content bg-purple">
-                <el-pagination v-model:currentPage="currentpage" background layout="prev, pager, next" :total="total"
-                    style="width:100%;" />
-
-            </div>
-        </el-col>
-        <el-col :span="4">
-            <div class="grid-content bg-purple" />
-        </el-col>
-
-
-    </el-row>
+      <div class="grid-content bg-purple">
+        <el-pagination
+          v-model:currentPage="currentpage"
+          background
+          layout="prev, pager, next"
+          :total="total"
+          style="width: 100%"
+        />
+      </div>
+    </el-col>
+    <el-col :span="4">
+      <div class="grid-content bg-purple" />
+    </el-col>
+  </el-row>
 </template>
 <style  >
 </style>
@@ -166,20 +200,25 @@ export default {
 
         gotodetail(row, column, cell, event) {
             console.log(row, column, cell, event);
-            if (column.property == 'title' || column.property == 'detail') {
-                if (row.title.lastIndexOf(".") > 0) {
-                    let ext = row.title.substring(row.title.lastIndexOf("."))
-                    if (ext != '') {
+           
+            if (row.title.lastIndexOf(".") > 0) {
+                let ext = row.title.substring(row.title.lastIndexOf("."))
+                if (ext != '') {
+                    window.open('/api/blob/' + row.id, '_blank');
+                }
+            } else {
+                    if (column.property == 'title') {
+                        this.$router.push(
+                            {
+                                path: "/note/" + row.id,
+                            }
+                        )
+                    }else if ( column.property == 'detail') {
                         window.open('/api/blob/' + row.id, '_blank');
                     }
-                } else {
-                    this.$router.push(
-                        {
-                            path: "/note/" + row.id,
-                        }
-                    )
-                }
             }
+            }
+    
 
 
         },
