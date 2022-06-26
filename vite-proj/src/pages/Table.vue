@@ -201,12 +201,7 @@ export default {
         gotodetail(row, column, cell, event) {
             console.log(row, column, cell, event);
            
-            if (row.title.lastIndexOf(".") > 0) {
-                let ext = row.title.substring(row.title.lastIndexOf("."))
-                if (ext != '') {
-                    window.open('/api/blob/' + row.id, '_blank');
-                }
-            } else {
+          
                     if (column.property == 'title') {
                         this.$router.push(
                             {
@@ -214,10 +209,19 @@ export default {
                             }
                         )
                     }else if ( column.property == 'detail') {
-                        window.open('/api/blob/' + row.id, '_blank');
+
+                       if (row.title.lastIndexOf(".") > 0) {
+                          let ext = row.title.substring(row.title.lastIndexOf("."))
+                          if (ext != '') {
+                              window.open('/api/blob/' + row.id, '_blank');
+                          }
+                      }else{
+                          window.open('/note/' + row.id, '_blank');
+                      }
+                       
                     }
             }
-            }
+   
     
 
 
