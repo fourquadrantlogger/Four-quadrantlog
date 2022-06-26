@@ -21,7 +21,7 @@
         </el-select>
     </div>
 
-    <el-input :style="{'height': height}" v-model="log.detail" :rows="5" type="textarea" placeholder="内容" clearable/>
+    <el-input style="height:500px;font-size: 18px;" v-model="log.detail" :rows="5" type="textarea" placeholder="内容" clearable/>
     <el-input v-model="log.review" :rows="5" type="textarea" placeholder="思考" clearable/>
 </template>
 <script>
