@@ -28,9 +28,19 @@ func DeleteLog(id string) (err error) {
 	return
 }
 func UpdateLog(log *model.Log) (err error) {
-	_, cli, err := mysqlcli.GetMysqlClient()
+	cfg, cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
+	}
+	logmodel := Model(cfg.DBName, "log")
+	if log.Detail != nil {
+		detaillen, e := CheckStringLen(*log.Detail)
+		if e != nil {
+			return e
+		}
+		if detaillen.Len > logmodel["detail"].Length {
+			return errors.New("detail text too long," + fmt.Sprint(detaillen.Len) + "/" + fmt.Sprint(logmodel["detail"].Length))
+		}
 	}
 	tx := cli.Table("log").Where("id = ?", log.ID).Updates(log)
 	err = tx.Error
