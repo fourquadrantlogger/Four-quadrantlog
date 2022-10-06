@@ -101,8 +101,8 @@ func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail,
 	txtotal := cli.Table("log")
 
 	if quadrant > 0 {
-		tx = tx.Where("quadrant = ?", quadrant)
-		txtotal = txtotal.Where("quadrant = ?", quadrant)
+		tx = tx.Where("quadrant & ? = ?", quadrant, quadrant)
+		txtotal = txtotal.Where("quadrant & ? = ?", quadrant, quadrant)
 	}
 	if start.Unix() != (time.Time{}.Unix()) {
 		tx = tx.Where("ctime >= ?", start)
