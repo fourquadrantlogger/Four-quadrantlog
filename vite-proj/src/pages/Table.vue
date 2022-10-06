@@ -112,178 +112,163 @@
 <style  >
 </style>
 <script >
-import { getLogList, Quadrant } from '../apis/apis'
-import { ElMessage } from 'element-plus'
-import { GetZhWeekDay } from '../xutil/xtime'
+import { getLogList, Quadrant } from "../apis/apis";
+import { ElMessage } from "element-plus";
+import { GetZhWeekDay } from "../xutil/xtime";
 export default {
-    created() {
-        this.resetheight()
-        window.addEventListener('resize', this.resetheight);
+  created() {
+    this.resetheight();
+    window.addEventListener("resize", this.resetheight);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.resetheight);
+  },
+  data() {
+    return {
+      randomKey: Math.random(),
+      ctimestartquery: "",
+      ctimeendquery: "",
+      quadrantquery: "",
+      atypequery: "",
+      locationquery: "",
+      titlequery: "",
+      detailquery: "",
+      reviewquery: "",
+      currentpage: 1,
+      pagesize: 20,
+      List: [],
+      QuadrantOptions: Quadrant,
+      maintable: {
+        height: "600px",
+        width: "100%",
+      },
+      total: 0,
+    };
+  },
+  watch: {
+    ctimeendquery: function (v) {
+      console.log(v);
+      this.listLog();
     },
-    destroyed() {
-        window.removeEventListener('resize', this.resetheight)
+    ctimestartquery: function (v) {
+      console.log(v);
+      this.listLog();
     },
-    data() {
-        return {
-            randomKey: Math.random(),
-            ctimestartquery: '',
-            ctimeendquery: '',
-            quadrantquery: '',
-            atypequery: '',
-            locationquery: '',
-            titlequery: '',
-            detailquery: '',
-            reviewquery: '',
-            currentpage: 1,
-            pagesize: 20,
-            List: [],
-            QuadrantOptions: Quadrant,
-            maintable: {
-                height: '600px',
-                width: '100%',
-            },
-            total: 0,
+    quadrantquery: function (v) {
+      console.log(v);
+      if (v.length >= 0) {
+        this.listLog();
+      }
+    },
+    atypequery: function (v) {
+      console.log(v);
+      this.listLog();
+    },
+    locationquery: function (v) {
+      console.log(v);
+      this.listLog();
+    },
+    titlequery: function (v) {
+      console.log(v);
+      this.listLog();
+    },
+    detailquery: function (v) {
+      console.log(v);
+      this.listLog();
+    },
+    reviewquery: function (v) {
+      console.log(v);
+      this.listLog();
+    },
+    currentpage: function (v) {
+      console.log(v);
+      this.listLog();
+    },
+    pagesize: function (v) {
+      console.log(v);
+      this.listLog();
+    },
+  },
+  mounted: function () {
+    console.log(this.$route.query);
+    this.atypequery = this.$route.query.atypequery;
+    // this.listLog();
+  },
+  methods: {
+    gotodetail(row, column, cell, event) {
+      console.log(row, column, cell, event);
+
+      if (column.property == "title") {
+        this.$router.push({
+          path: "/note/" + row.id,
+        });
+      } else if (column.property == "detail") {
+        if (row.title.lastIndexOf(".") > 0) {
+          let ext = row.title.substring(row.title.lastIndexOf("."));
+          if (ext != "") {
+            window.open("/api/blob/" + row.id, "_blank");
+          }
+        } else {
+          window.open("/note/" + row.id, "_blank");
         }
+      }
     },
-    watch: {
-        ctimeendquery: function (v) {
-            console.log(v)
-            this.listLog()
-        },
-        ctimestartquery: function (v) {
-            console.log(v)
-            this.listLog()
-        },
-        quadrantquery: function (v) {
-
-            console.log(v)
-            if (v.length >= 0) {
-                this.listLog()
-            }
-
-        },
-        atypequery: function (v) {
-            console.log(v)
-            this.listLog()
-        },
-        locationquery: function (v) {
-            console.log(v)
-            this.listLog()
-        },
-        titlequery: function (v) {
-            console.log(v)
-            this.listLog()
-        },
-        detailquery: function (v) {
-            console.log(v)
-            this.listLog()
-        },
-        reviewquery: function (v) {
-            console.log(v)
-            this.listLog()
-        },
-        currentpage: function (v) {
-            console.log(v)
-            this.listLog()
-        },
-        pagesize: function (v) {
-            console.log(v)
-            this.listLog()
-        },
+    resetheight() {
+      this.maintable.height = window.innerHeight - 150 + "px";
     },
-    mounted: function () {
-        console.log(this.$route.query)
-        this.atypequery = this.$route.query.atypequery;
-       // this.listLog();
+    async listLog() {
+      let query = {};
+      if (this.ctimestartquery != null) {
+        query.start = this.ctimestartquery.toLocaleString();
+      }
+      if (this.ctimeendquery != null) {
+        query.end = this.ctimeendquery.toLocaleString();
+      }
+      if (this.quadrantquery != null) {
+        if (this.quadrantquery instanceof Array) {
+          query.quadrant = this.quadrantquery.join("/");
+        } else {
+          query.quadrant = this.quadrantquery;
+        }
+      }
+      if (this.atypequery != undefined) {
+        query.atype = this.atypequery;
+      }
+      if (this.locationquery != undefined) {
+        query.location = this.locationquery;
+      }
+      if (this.titlequery != undefined) {
+        query.title = this.titlequery;
+      }
+      if (this.detailquery != undefined) {
+        query.detail = this.detailquery;
+      }
+      if (this.reviewquery != undefined) {
+        query.review = this.reviewquery;
+      }
+
+      query.offset = (this.currentpage - 1) * this.pagesize;
+      query.limit = this.pagesize;
+
+      const loglist = await getLogList(query);
+      console.log(loglist);
+      this.List = [].concat(loglist.data);
+      for (let i = 0; i < this.List.length; i++) {
+        let weekday = GetZhWeekDay(new Date(this.List[i].ctime));
+        this.List[i].ctime = ["星期" + weekday, this.List[i].ctime];
+      }
+      this.total = loglist.total;
+      ElMessage.success("获取日志成功");
+      return;
     },
-    methods: {
-
-        gotodetail(row, column, cell, event) {
-            console.log(row, column, cell, event);
-           
-          
-                    if (column.property == 'title') {
-                        this.$router.push(
-                            {
-                                path: "/note/" + row.id,
-                            }
-                        )
-                    }else if ( column.property == 'detail') {
-
-                       if (row.title.lastIndexOf(".") > 0) {
-                          let ext = row.title.substring(row.title.lastIndexOf("."))
-                          if (ext != '') {
-                              window.open('/api/blob/' + row.id, '_blank');
-                          }
-                      }else{
-                          window.open('/note/' + row.id, '_blank');
-                      }
-                       
-                    }
-            }
-   
-    
-
-
-        },
-        resetheight() {
-            this.maintable.height = window.innerHeight - 150 + 'px'
-        },
-        async listLog() {
-            let query = {}
-            if (this.ctimestartquery != null) {
-                query.start = this.ctimestartquery.toLocaleString()
-            }
-            if (this.ctimeendquery != null) {
-                query.end = this.ctimeendquery.toLocaleString()
-            }
-            if (this.quadrantquery != null) {
-                if (this.quadrantquery instanceof Array) {
-                    query.quadrant = this.quadrantquery.join('/')
-                } else {
-                    query.quadrant = this.quadrantquery
-                }
-
-            }
-            if (this.atypequery != undefined) {
-                query.atype = this.atypequery
-            }
-            if (this.locationquery != undefined) {
-                query.location = this.locationquery
-            }
-            if (this.titlequery != undefined) {
-                query.title = this.titlequery
-            }
-            if (this.detailquery != undefined) {
-                query.detail = this.detailquery
-            } if (this.reviewquery != undefined) {
-                query.review = this.reviewquery
-            }
-
-            query.offset = (this.currentpage - 1) * this.pagesize
-            query.limit = this.pagesize
-
-            const loglist = await getLogList(query)
-            console.log(loglist)
-            this.List = [].concat(loglist.data)
-            for (let i = 0; i < this.List.length; i++) {
-                let weekday = GetZhWeekDay(new Date(this.List[i].ctime));
-                this.List[i].ctime = ["星期" + weekday, this.List[i].ctime];
-            }
-            this.total = loglist.total
-            ElMessage.success('获取日志成功')
-            return
-        },
-        alterData(row, column) {
-            row[column.property + "isShow"] = false
-            this.refreshTable()
-        },
-
-        refreshTable() {
-            this.randomKey = Math.random()
-        },
-
+    alterData(row, column) {
+      row[column.property + "isShow"] = false;
+      this.refreshTable();
     },
-}
 
+    refreshTable() {
+      this.randomKey = Math.random();
+    },
+  },
+};
 </script>
