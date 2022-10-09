@@ -21,8 +21,8 @@
         </el-select>
     </div>
 
-    <el-input style="font-size: 18px;" v-model="log.detail" :rows="30" type="textarea" placeholder="内容" clearable/>
-    <el-input v-model="log.review" :rows="10" type="textarea" placeholder="思考" clearable/>
+    <el-input style="font-size: 18px;" v-model="log.detail" :rows="20" type="textarea" placeholder="内容" clearable/>
+    <el-input v-model="log.review" :rows="5" type="textarea" placeholder="思考" clearable/>
 </template>
 <script>
 import {Quadrant} from '../apis/apis'
