@@ -100,6 +100,7 @@
           background
           layout="prev, pager, next"
           :total="total"
+          :page-size="pagesize"
           style="width: 100%"
         />
       </div>
@@ -147,52 +148,53 @@ export default {
   },
   watch: {
     ctimeendquery: function (v) {
-      console.log(v);
+      console.log("ctimeendquery",v);
       this.listLog();
     },
     ctimestartquery: function (v) {
-      console.log(v);
+      console.log("ctimestartquery",v);
       this.listLog();
     },
     quadrantquery: function (v) {
-      console.log(v);
+      console.log("quadrantquery",v);
       if (v.length >= 0) {
         this.listLog();
       }
     },
     atypequery: function (v) {
-      console.log(v);
+      console.log("atypequery",v);
       this.listLog();
     },
     locationquery: function (v) {
-      console.log(v);
+      console.log("locationquery",v);
       this.listLog();
     },
     titlequery: function (v) {
-      console.log(v);
+      console.log("titlequery",v);
       this.listLog();
     },
     detailquery: function (v) {
-      console.log(v);
+      console.log("detailquery",v);
       this.listLog();
     },
     reviewquery: function (v) {
-      console.log(v);
+      console.log("reviewquery",v);
       this.listLog();
     },
     currentpage: function (v) {
-      console.log(v);
+      console.log("currentpage",v);
       this.listLog();
     },
     pagesize: function (v) {
-      console.log(v);
+      console.log("pagesize",v);
       this.listLog();
     },
   },
   mounted: function () {
     console.log(this.$route.query);
-    this.atypequery = this.$route.query.atypequery;
-    // this.listLog();
+    if (this.$route.query.atypequery!=undefined){
+       this.atypequery = this.$route.query.atypequery;
+    }
   },
   methods: {
     gotodetail(row, column, cell, event) {
