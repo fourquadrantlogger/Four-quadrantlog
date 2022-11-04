@@ -1,9 +1,39 @@
 <template>
+    <el-row style="height: 50px">
+    <el-col :span="3">
+      <div class="grid-content bg-purple" />
+      <el-date-picker
+        v-model="ctimestartquery"
+        type="datetime"
+        placeholder="起始"
+        align="right"
+        value-format="YYYY-MM-DD HH:mm:ss"
+        format="YYYY-MM-DD HH:mm:ss"
+      ></el-date-picker>
+    </el-col>
+    <el-col :span="3">
+      <div class="grid-content bg-purple-light" />
+      <el-date-picker
+        v-model="ctimeendquery"
+        type="datetime"
+        placeholder="结束"
+        align="right"
+        value-format="YYYY-MM-DD HH:mm:ss"
+        format="YYYY-MM-DD HH:mm:ss"
+      />
+    </el-col>
+   
+    <el-col :span="3">
+      <el-input v-model="atypequery" placeholder="类别" />
+    </el-col>
+
+  </el-row>
+
 <div style="display: flex " class="all">
-   <CloudTag style="width:400px;height:400px;" :datas="q1" :title='肉体象限'></CloudTag>
-  <CloudTag style="width:400px;height:400px;" :datas="q2" :title='知识信息象限'></CloudTag>
-  <CloudTag style="width:400px;height:400px;" :datas="q3" :title='社会关系象限'></CloudTag>
-  <CloudTag style="width:400px;height:500px;" :datas="q4" :title='持有物象限'></CloudTag>
+   <CloudTag style="width:800px;height:800px;" :datas="q1" :title='肉体象限'></CloudTag>
+  <CloudTag style="width:800px;height:800px;" :datas="q2" :title='知识信息象限'></CloudTag>
+  <CloudTag style="width:800px;height:800px;" :datas="q3" :title='社会关系象限'></CloudTag>
+  <CloudTag style="width:800px;height:800px;" :datas="q4" :title='持有物象限'></CloudTag>
 </div>
 
 </template>
@@ -24,8 +54,11 @@ export default {
       q2: [],
       q3: [],
       q4: [],
+      ctimestartquery: "",
+      ctimeendquery: "",
+      atypequery:"",
+      limit: 100,
     }
-
   },
   mounted: function () {
     this.tagLog()
@@ -37,33 +70,16 @@ export default {
       let start = new Date()
       start.setMonth(start.getMonth() - 3);
       query.start = start.toLocaleString()
-      // if (this.ctimestartquery != null) {
-      //     query.start = this.ctimestartquery.toLocaleString()
-      // }
-      // if (this.ctimeendquery != null) {
-      //     query.end = this.ctimeendquery.toLocaleString()
-      // }
-      // if (this.quadrantquery != null) {
-      //     if (this.quadrantquery instanceof Array) {
-      //         query.quadrant = this.quadrantquery.join('/')
-      //     } else {
-      //         query.quadrant = this.quadrantquery
-      //     }
+      if (this.ctimestartquery != null) {
+          query.start = this.ctimestartquery.toLocaleString()
+      }
+      if (this.ctimeendquery != null) {
+          query.end = this.ctimeendquery.toLocaleString()
+      }
 
-      // }
-
-      // if (this.locationquery != undefined) {
-      //     query.location = this.locationquery
-      // }
-      // if (this.titlequery != undefined) {
-      //     query.title = this.titlequery
-      // }
-      // if (this.detailquery != undefined) {
-      //     query.detail = this.detailquery
-      // } if (this.reviewquery != undefined) {
-      //     query.review = this.reviewquery
-      // }
-
+      if (this.ctimeendquery != null) {
+          query.atype = this.atypequery
+      }
       {
         query.quadrant = '肉体'
         const taglist = await getTagList(query)

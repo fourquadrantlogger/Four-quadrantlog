@@ -13,7 +13,7 @@ type Tag struct {
 	Value int    `json:"value"`
 }
 
-func GroupbyTags(start, end time.Time, quadrant int, location, title, detail, review string, limit int) (bs []Tag, err error) {
+func GroupbyTags(start, end time.Time, quadrant int, location, atype, title, detail, review string, limit int) (bs []Tag, err error) {
 	_, tx, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
@@ -42,7 +42,9 @@ json_table(
 	if location != "" {
 		swhere = swhere + (" location like  %" + location + "% and ")
 	}
-
+	if atype != "" {
+		swhere = swhere + ("atype like " + "%" + atype + "%")
+	}
 	if title != "" {
 		swhere = swhere + (" title like   " + "%" + location + "%" + " and ")
 	}

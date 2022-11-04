@@ -12,7 +12,7 @@ import (
 
 func GetTags(c *gin.Context) {
 	var start, end time.Time
-	var limit = 20
+	var limit = 100
 	if c.Query("limit") != "" {
 		limit, _ = strconv.Atoi(c.Query("limit"))
 	}
@@ -34,6 +34,7 @@ func GetTags(c *gin.Context) {
 	b, err := service.GroupbyTags(start, end,
 		quadrantint,
 		c.Query("location"),
+		c.Query("atype"),
 		c.Query("title"),
 		c.Query("detail"),
 		c.Query("review"),
