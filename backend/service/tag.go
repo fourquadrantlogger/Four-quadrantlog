@@ -43,10 +43,10 @@ json_table(
 		swhere = swhere + (" location like  %" + location + "% and ")
 	}
 	if atype != "" {
-		swhere = swhere + ("atype like " + "%" + atype + "%")
+		swhere = swhere + ("atype like " + "'%" + atype + "%'" + " and ")
 	}
 	if title != "" {
-		swhere = swhere + (" title like   " + "%" + location + "%" + " and ")
+		swhere = swhere + (" title like " + "%" + location + "%" + " and ")
 	}
 	if detail != "" {
 		swhere = swhere + (" detail like   " + "%" + location + "%" + " and ")
