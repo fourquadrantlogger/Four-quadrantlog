@@ -40,19 +40,19 @@ json_table(
 		swhere = swhere + (" ctime <= '" + fmt.Sprint(end) + "' and ")
 	}
 	if location != "" {
-		swhere = swhere + (" location like  %" + location + "% and ")
+		swhere = swhere + (" location like  '%" + location + "%' and ")
 	}
 	if atype != "" {
-		swhere = swhere + ("atype like " + "'%" + atype + "%'" + " and ")
+		swhere = swhere + ("atype like  '%" + atype + "%'" + " and ")
 	}
 	if title != "" {
-		swhere = swhere + (" title like " + "%" + location + "%" + " and ")
+		swhere = swhere + (" title like  '%" + title + "%'" + " and ")
 	}
 	if detail != "" {
-		swhere = swhere + (" detail like   " + "%" + location + "%" + " and ")
+		swhere = swhere + (" detail like '%" + detail + "%' and ")
 	}
 	if review != "" {
-		swhere = swhere + (" review like   " + "%" + location + "%" + " and ")
+		swhere = swhere + (" review like '%" + location + "%' and ")
 	}
 	swhere += " 1=1"
 
