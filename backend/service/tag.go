@@ -30,7 +30,7 @@ json_table(
 
 	swhere := "where "
 	if quadrant > 0 {
-		swhere = swhere + (" quadrant = " + fmt.Sprint(quadrant) + " and ")
+		swhere = swhere + (" quadrant & " + fmt.Sprint(quadrant) + "= " + fmt.Sprint(quadrant) + " and ")
 	}
 	if start.Unix() != (time.Time{}.Unix()) {
 		swhere = swhere + (" ctime  >= '" + fmt.Sprint(start) + "' and ")

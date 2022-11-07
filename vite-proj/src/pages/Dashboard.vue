@@ -127,7 +127,7 @@ export default {
         query.end = this.ctimeendquery.toLocaleString();
       }
 
-      if (this.ctimeendquery != null) {
+      if (this.atype != null) {
         query.atype = this.atypequery;
       }
       if (this.titlequery != null) {
