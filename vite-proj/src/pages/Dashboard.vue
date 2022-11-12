@@ -61,6 +61,7 @@
 </style>
 <script>
 import CloudTag from "../layouts/CloudTag.vue";
+import "../xutil/date.js"
 import { getTagList, Quadrant } from "../apis/apis";
 
 import { ElMessage } from "element-plus";
@@ -119,22 +120,22 @@ export default {
       query.limit = 50;
       let start = new Date();
       start.setMonth(start.getMonth() - 3);
-      query.start = start.toLocaleString();
-      if (this.ctimestartquery != null) {
-        query.start = this.ctimestartquery.toLocaleString();
+      query.start = start.format("yyyy-MM-dd hh:mm:ss");
+      if (this.ctimestartquery.length>0) {
+        query.start = this.ctimestartquery;
       }
-      if (this.ctimeendquery != null) {
-        query.end = this.ctimeendquery.toLocaleString();
+      if (this.ctimeendquery.length>0) {
+        query.end = this.ctimeendquery;
       }
 
-      if (this.atypequery != null) {
+      if (this.atypequery.length>0) {
         query.atype = this.atypequery;
       }
-      if (this.titlequery != null) {
+      if (this.titlequery.length>0) {
         query.title = this.titlequery;
       }
 
-      if (this.detailquery != null) {
+      if (this.detailquery.length>0) {
         query.detail = this.detailquery;
       }
       {
