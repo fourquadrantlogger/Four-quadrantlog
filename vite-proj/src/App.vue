@@ -1,6 +1,6 @@
 <template>
     <el-container class="alldiv" style="border: 1px solid #eee">
-        <el-aside class="alldiv" width="200px">
+        <el-aside class="alldiv" width="120px">
             <div style=" display:flex;
     justify-content: center;width:100%;">
                 <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
