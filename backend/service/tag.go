@@ -30,7 +30,7 @@ json_table(
 
 	swhere := "where "
 	if quadrant > 0 {
-		swhere = swhere + (" quadrant = " + fmt.Sprint(quadrant) + " and ")
+		swhere = swhere + (" quadrant & " + fmt.Sprint(quadrant) + "= " + fmt.Sprint(quadrant) + " and ")
 	}
 	if start.Unix() != (time.Time{}.Unix()) {
 		swhere = swhere + (" ctime  >= '" + fmt.Sprint(start) + "' and ")
@@ -40,19 +40,19 @@ json_table(
 		swhere = swhere + (" ctime <= '" + fmt.Sprint(end) + "' and ")
 	}
 	if location != "" {
-		swhere = swhere + (" location like  %" + location + "% and ")
+		swhere = swhere + (" location like  '%" + location + "%' and ")
 	}
 	if atype != "" {
-		swhere = swhere + ("atype like " + "%" + atype + "%")
+		swhere = swhere + ("atype like  '%" + atype + "%'" + " and ")
 	}
 	if title != "" {
-		swhere = swhere + (" title like   " + "%" + location + "%" + " and ")
+		swhere = swhere + (" title like  '%" + title + "%'" + " and ")
 	}
 	if detail != "" {
-		swhere = swhere + (" detail like   " + "%" + location + "%" + " and ")
+		swhere = swhere + (" detail like '%" + detail + "%' and ")
 	}
 	if review != "" {
-		swhere = swhere + (" review like   " + "%" + location + "%" + " and ")
+		swhere = swhere + (" review like '%" + location + "%' and ")
 	}
 	swhere += " 1=1"
 

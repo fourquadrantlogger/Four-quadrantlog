@@ -6,9 +6,11 @@ import (
 	"fourquadrantlog/assist/xlog"
 	"fourquadrantlog/model"
 	"fourquadrantlog/storage/mysqlcli"
+	"strings"
+	"time"
+
 	"github.com/google/uuid"
 	"go.uber.org/zap"
-	"time"
 )
 
 func DeleteLog(id string) (err error) {
@@ -100,6 +102,13 @@ func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail,
 	tx := cli.Table("log")
 	txtotal := cli.Table("log")
 
+	var quotacheck = func(field string) string {
+		runefiled := []rune(field)
+		if len(runefiled) > 2 && runefiled[0] == '\'' && field[len(runefiled)-1] == '\'' {
+			return string(runefiled[1 : len(runefiled)-1])
+		}
+		return field
+	}
 	if quadrant > 0 {
 		tx = tx.Where("quadrant & ? = ?", quadrant, quadrant)
 		txtotal = txtotal.Where("quadrant & ? = ?", quadrant, quadrant)
@@ -118,12 +127,32 @@ func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail,
 		txtotal = txtotal.Where("location like ?", "%"+location+"%")
 	}
 	if atype != "" {
-		tx = tx.Where("atype like ?", "%"+atype+"%")
-		txtotal = txtotal.Where("atype like ?", "%"+atype+"%")
+		atypes := strings.Split(atype, ",")
+		for _, at := range atypes {
+
+			shortat := quotacheck(at)
+
+			if shortat != at {
+				tx = tx.Where("JSON_CONTAINS(atype, '\"" + shortat + "\"')")
+				txtotal = txtotal.Where("JSON_CONTAINS(atype, '\"" + shortat + "\"')")
+			} else {
+				tx = tx.Where("atype like ?", "%"+shortat+"%")
+				txtotal = txtotal.Where("atype like ?", "%"+shortat+"%")
+			}
+
+		}
+
 	}
 	if title != "" {
-		tx = tx.Where("title like ?", "%"+title+"%")
-		txtotal = txtotal.Where("title like ?", "%"+title+"%")
+		at := quotacheck(title)
+		if at != title {
+			tx = tx.Where("title = ?", at)
+			txtotal = txtotal.Where("title = ?", at)
+		} else {
+			tx = tx.Where("title like ?", "%"+title+"%")
+			txtotal = txtotal.Where("title like ?", "%"+title+"%")
+		}
+
 	}
 	if detail != "" {
 		tx = tx.Where("detail like ?", "%"+detail+"%")

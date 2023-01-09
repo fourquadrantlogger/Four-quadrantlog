@@ -3,7 +3,7 @@ import axios from "axios"
 // 创建axios实例，设置配置得默认值
 const instance = axios.create({
 	baseUrl: '127.0.0.1:10008',   // 这里写接口的http地址，
-	timeout: 20000,  // 设置请求超时的默认值 
+	timeout: 1000000,  // 设置请求超时的默认值 
 })
 // 设置请求拦截器
 instance.interceptors.request.use(

@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	local, err := mysqlcli.MysqlClient("root:root@tcp(127.0.0.1:3306)/cplug?charset=utf8mb4&parseTime=True&loc=Local")
+	local, err := mysqlcli.MysqlClient("root:Abc_014916@tcp(rm-j6c8z8i3llo2r369vbo.mysql.rds.aliyuncs.com:3306)/fourquadrantlog?charset=utf8mb4&parseTime=True&loc=Local")
 	if err != nil {
 		xlog.Logger.Debug("", zap.Error(err))
 		return
