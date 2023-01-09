@@ -63,13 +63,13 @@ func GetLogs(c *gin.Context) {
 	} else {
 		for i, _ := range b {
 			b[i].FixShow()
-			if b[i].Detail != nil && len(*b[i].Detail) > 100 {
-				var detail = (*b[i].Detail)[:100]
+			if b[i].Detail != nil && len(*b[i].Detail) > 500 {
+				var detail = (*b[i].Detail)[:500]
 				b[i].Detail = &detail
 			}
 
-			if b[i].Review != nil && len(*b[i].Review) > 100 {
-				var review = (*b[i].Review)[:100]
+			if b[i].Review != nil && len(*b[i].Review) > 500 {
+				var review = (*b[i].Review)[:500]
 				b[i].Review = &review
 			}
 		}
