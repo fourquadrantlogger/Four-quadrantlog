@@ -81,6 +81,7 @@
           prop="detail"
           label="详情"
           width="calc(100% - 790px)"
+          min-width="400px"
         />
         <el-table-column prop="review" label="回顾" width="100px" />
       </el-table>
