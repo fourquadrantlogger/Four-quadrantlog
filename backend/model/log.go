@@ -15,6 +15,7 @@ type Log struct {
 	Ctime_    string    `json:"ctime" gorm:"-"`
 	Location  *string   `json:"location"`
 	Atype     string    `json:"atype" gorm:"atype"`
+	Atype_    []string  `json:"-" gorm:"-"`
 	Title     string    `json:"title"`
 	Detail    *string   `json:"detail"`
 	Review    *string   `json:"review"`
@@ -31,8 +32,8 @@ func (l *Log) FixShow() {
 func (l *Log) FixForDB() {
 	l.Quadrant = Quadrant2Int(l.Quadrant_)
 
-	var atype_ = strings.Split(l.Atype, "/")
-	AtypeBytes, _ := json.Marshal(atype_)
+	l.Atype_ = strings.Split(l.Atype, "/")
+	AtypeBytes, _ := json.Marshal(l.Atype_)
 	l.Atype = string(AtypeBytes)
 
 	l.Ctime_ = l.Ctime.Format("2006-01-02 15:04:05")

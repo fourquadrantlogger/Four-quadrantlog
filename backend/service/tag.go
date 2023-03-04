@@ -1,8 +1,10 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
 	"fourquadrantlog/assist/xlog"
+	"fourquadrantlog/model"
 	"fourquadrantlog/storage/mysqlcli"
 	"go.uber.org/zap"
 	"time"
@@ -66,4 +68,35 @@ json_table(
 	}
 
 	return
+}
+
+func TagTable() {
+	_, tx, err := mysqlcli.GetMysqlClient()
+	if err != nil {
+		return
+	}
+	tags := make([]model.Log, 0)
+	err = tx.Table("log").Select("id,quadrant,atype").Find(&tags).Error
+
+	for i := 0; i < len(tags); i++ {
+		stag := make([]string, 0)
+		json.Unmarshal([]byte(tags[i].Atype), &stag)
+
+		for j := 0; j < len(stag); j++ {
+
+			err = tx.Table("tag").Create(model.Tag{
+				Tag:      stag[j],
+				Log:      tags[i].ID,
+				Quadrant: tags[i].Quadrant,
+				Score:    0,
+			}).Error
+			if err != nil {
+
+				return
+			} else {
+				xlog.Logger.Info(fmt.Sprint(len(tags)) + "/" + fmt.Sprint(i))
+			}
+		}
+	}
+
 }

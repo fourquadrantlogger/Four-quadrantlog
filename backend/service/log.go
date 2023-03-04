@@ -6,6 +6,7 @@ import (
 	"fourquadrantlog/assist/xlog"
 	"fourquadrantlog/model"
 	"fourquadrantlog/storage/mysqlcli"
+	"gorm.io/gorm"
 	"strings"
 	"time"
 
@@ -86,11 +87,31 @@ func CreateLog(log *model.Log) (err error) {
 		}
 	}
 
-	tx := cli.Table("log").Create(log)
-	err = tx.Error
+	cli.Transaction(func(tx *gorm.DB) error {
+		// 在事务中执行一些 db 操作（从这里开始，您应该使用 'tx' 而不是 'db'）
+		if e := tx.Table("log").Create(log).Error; e != nil {
+			// 返回任何错误都会回滚事务
+			return e
+		}
+		for _, t := range log.Atype_ {
+			tag := model.Tag{
+				Log: log.ID,
+				Tag: t,
+			}
+			if e := tx.Table("tag").Create(tag).Error; e != nil {
+				return e
+			}
+			xlog.Logger.Info("insert tag", zap.Any("tag", tag))
+		}
+
+		// 返回 nil 提交事务
+		return nil
+	})
+
 	if err == nil {
 		xlog.Logger.Info("insert log", zap.Any("log", log))
 	}
+
 	return
 }
 
@@ -128,16 +149,18 @@ func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail,
 	}
 	if atype != "" {
 		atypes := strings.Split(atype, ",")
+		tx.Joins("JOIN tag ON tag.log = log.id ")
+		txtotal.Joins("left JOIN tag ON tag.log = log.id ")
 		for _, at := range atypes {
 
 			shortat := quotacheck(at)
 
 			if shortat != at {
-				tx = tx.Where("JSON_CONTAINS(atype, '\"" + shortat + "\"')")
-				txtotal = txtotal.Where("JSON_CONTAINS(atype, '\"" + shortat + "\"')")
+				tx = tx.Where("tag.tag= ?", shortat)
+				txtotal = txtotal.Where("tag.tag= ?", shortat)
 			} else {
-				tx = tx.Where("atype like ?", "%"+shortat+"%")
-				txtotal = txtotal.Where("atype like ?", "%"+shortat+"%")
+				tx = tx.Where("tag.tag like ?", "%"+shortat+"%")
+				txtotal = txtotal.Where("tag.tag like ?", "%"+shortat+"%")
 			}
 
 		}
