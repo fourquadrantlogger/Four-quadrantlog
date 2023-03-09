@@ -151,8 +151,8 @@ func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail,
 	if err != nil {
 		return
 	}
-	tx := cli.Table("log").Select("id,title,quadrant,atype,detail,review,location,ctime")
-	txtotal := cli.Table("log").Select("id,title,quadrant,atype,detail,review,location,ctime")
+	tx := cli.Table("log").Select("id,title,log.quadrant,atype,detail,review,location,ctime")
+	txtotal := cli.Table("log").Select("id,title,log.quadrant,atype,detail,review,location,ctime")
 
 	var quotacheck = func(field string) string {
 		runefiled := []rune(field)
