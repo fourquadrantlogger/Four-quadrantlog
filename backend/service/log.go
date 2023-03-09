@@ -55,10 +55,30 @@ func UpdateLog(log *model.Log) (err error) {
 			return errors.New("detail text too long," + fmt.Sprint(detaillen.Len) + "/" + fmt.Sprint(logmodel["detail"].Length))
 		}
 	}
-	tx := cli.Table("log").Where("id = ?", log.ID).Updates(log)
-	err = tx.Error
+	cli.Transaction(func(tx *gorm.DB) error {
+		// 在事务中执行一些 db 操作（从这里开始，您应该使用 'tx' 而不是 'db'）
+		if err = tx.Table("log").Where("id = ?", log.ID).Updates(log).Error; err != nil {
+			return err
+		}
+		if err = tx.Table("tag").Where("log = ?", log.ID).Delete(new(model.Log)).Error; err != nil {
+			return err
+		}
+		for _, t := range log.Atype_ {
+			tag := model.Tag{
+				Log: log.ID,
+				Tag: t,
+			}
+			if err = tx.Table("tag").Create(tag).Error; err != nil {
+				return err
+			}
+			xlog.Logger.Info("insert tag", zap.Any("tag", tag))
+		}
+		// 返回 nil 提交事务
+		return nil
+	})
+
 	if err == nil {
-		xlog.Logger.Info("insert log", zap.Any("log", log))
+		xlog.Logger.Info("update log", zap.Any("log", log))
 	}
 	return
 }
