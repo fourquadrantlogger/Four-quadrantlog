@@ -5,13 +5,16 @@ import (
 	"fourquadrantlog/storage/mysqlcli"
 )
 
-func GetBlob(id string) (b model.Log, err error) {
-
+func GetBlob(id string, selectblob bool) (b model.Log, err error) {
 	_, cli, err := mysqlcli.GetMysqlClient()
 	if err != nil {
 		return
 	}
-	tx := cli.Table("log").Where("id=?", id).First(&b)
+	selects := "id,title,quadrant,atype,detail,review,location,ctime"
+	if selectblob {
+		selects += ",blob"
+	}
+	tx := cli.Table("log").Select(selects).Where("id=?", id).First(&b)
 	err = tx.Error
 
 	return

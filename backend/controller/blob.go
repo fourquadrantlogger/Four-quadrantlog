@@ -21,7 +21,7 @@ import (
 func GetLog(c *gin.Context) {
 	logid := c.Params.ByName("logid")
 
-	b, err := service.GetBlob(logid)
+	b, err := service.GetBlob(logid, false)
 	b.Blob = nil
 	if err != nil {
 		c.Error(err)
@@ -34,7 +34,7 @@ func GetLog(c *gin.Context) {
 func GetBlob(c *gin.Context) {
 	blobid := c.Params.ByName("blobid")
 
-	b, err := service.GetBlob(blobid)
+	b, err := service.GetBlob(blobid, true)
 
 	if err != nil {
 		c.Error(err)
@@ -48,7 +48,7 @@ func GetBlob(c *gin.Context) {
 func GetCompressed(c *gin.Context) {
 	blobid := c.Params.ByName("blobid")
 
-	b, err := service.GetBlob(blobid)
+	b, err := service.GetBlob(blobid, true)
 	if err != nil {
 		c.Error(err)
 		return
