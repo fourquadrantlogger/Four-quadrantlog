@@ -23,8 +23,18 @@ func DeleteLog(id string) (err error) {
 	if id == "" {
 		return errors.New("id not set")
 	}
-	tx := cli.Table("log").Where("id = ?", id).Delete(new(model.Log))
-	err = tx.Error
+	cli.Transaction(func(tx *gorm.DB) error {
+		// 在事务中执行一些 db 操作（从这里开始，您应该使用 'tx' 而不是 'db'）
+		if err = tx.Table("log").Where("id = ?", id).Delete(new(model.Log)).Error; err != nil {
+			return err
+		}
+		if err = tx.Table("tag").Where("log = ?", id).Delete(new(model.Log)).Error; err != nil {
+			return err
+		}
+		// 返回 nil 提交事务
+		return nil
+	})
+
 	if err == nil {
 		xlog.Logger.Info("insert log", zap.Any("log", id))
 	}
@@ -109,6 +119,7 @@ func CreateLog(log *model.Log) (err error) {
 	})
 
 	if err == nil {
+		log.Blob = nil
 		xlog.Logger.Info("insert log", zap.Any("log", log))
 	}
 
@@ -195,14 +206,12 @@ func GetLogs(start, end time.Time, quadrant int, location, atype, title, detail,
 	err = tx.Find(&bs).Error
 
 	if err != nil {
-		panic(err)
 		xlog.Logger.Error("sql", zap.Error(err))
 		return
 	}
 
 	err = txtotal.Count(&total).Error
 	if err != nil {
-		panic(err)
 		xlog.Logger.Error("sql", zap.Error(err))
 		return
 	}

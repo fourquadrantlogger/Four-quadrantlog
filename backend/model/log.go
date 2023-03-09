@@ -19,6 +19,7 @@ type Log struct {
 	Title     string    `json:"title"`
 	Detail    *string   `json:"detail"`
 	Review    *string   `json:"review"`
+	Blob      []byte    `json:"blob"`
 }
 
 func (l *Log) FixShow() {

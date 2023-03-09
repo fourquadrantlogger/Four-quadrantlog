@@ -10,7 +10,7 @@ import (
 	"fourquadrantlog/service"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"path"
 	"strconv"
@@ -79,7 +79,7 @@ func GetCompressed(c *gin.Context) {
 }
 
 func CreateBlob(c *gin.Context) {
-	var log model.Blob
+	var log model.Log
 
 	var Atype_ = strings.Split(c.PostForm("atype"), "/")
 	atypes, _ := json.Marshal(Atype_)
@@ -128,12 +128,12 @@ func CreateBlob(c *gin.Context) {
 		c.String(http.StatusBadRequest, "get form err: %s", err.Error())
 		return
 	}
-	log.Blob, err = ioutil.ReadAll(f)
+	log.Blob, err = io.ReadAll(f)
 	if err != nil {
 		c.String(http.StatusBadRequest, "get form err: %s", err.Error())
 		return
 	}
-	err = service.CreateBlob(&log)
+	err = service.CreateLog(&log)
 	if err != nil {
 		c.Error(err)
 		return
