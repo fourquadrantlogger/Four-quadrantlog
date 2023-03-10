@@ -12,7 +12,7 @@ func GetBlob(id string, selectblob bool) (b model.Log, err error) {
 	}
 	selects := "id,title,quadrant,atype,detail,review,location,ctime"
 	if selectblob {
-		selects += ",blob"
+		selects += ",`blob`"
 	}
 	tx := cli.Table("log").Select(selects).Where("id=?", id).First(&b)
 	err = tx.Error
