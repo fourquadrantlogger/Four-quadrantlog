@@ -116,22 +116,22 @@ func CreateLog(log *model.Log) (err error) {
 			return errors.New("location too long," + fmt.Sprint(detaillen.Len) + "/" + fmt.Sprint(logmodel["location"].Length))
 		}
 	}
+	for _, t := range log.Atype_ {
+		tag := model.Tag{
+			Log: log.ID,
+			Tag: t,
+		}
+		if e := cli.Table("tag").Create(tag).Error; e != nil {
+			return e
+		}
+		xlog.Logger.Info("insert tag", zap.Any("tag", tag))
+	}
 
 	cli.Transaction(func(tx *gorm.DB) error {
 		// 在事务中执行一些 db 操作（从这里开始，您应该使用 'tx' 而不是 'db'）
 		if e := tx.Table("log").Create(log).Error; e != nil {
 			// 返回任何错误都会回滚事务
 			return e
-		}
-		for _, t := range log.Atype_ {
-			tag := model.Tag{
-				Log: log.ID,
-				Tag: t,
-			}
-			if e := tx.Table("tag").Create(tag).Error; e != nil {
-				return e
-			}
-			xlog.Logger.Info("insert tag", zap.Any("tag", tag))
 		}
 
 		// 返回 nil 提交事务
