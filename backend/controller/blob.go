@@ -11,8 +11,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"io"
+	"mime"
 	"net/http"
 	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -39,7 +41,13 @@ func GetBlob(c *gin.Context) {
 	if err != nil {
 		c.Error(err)
 	} else {
-		contentType := http.DetectContentType(b.Blob)
+		var contentType string
+		if filepath.Ext(b.Title) != "" {
+			contentType = mime.TypeByExtension(filepath.Ext(b.Title))
+		} else {
+			contentType = http.DetectContentType(b.Blob)
+		}
+
 		b.FixShow()
 		c.Data(200, contentType, b.Blob)
 	}
